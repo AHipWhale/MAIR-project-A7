@@ -26,6 +26,16 @@ def read_inputs(args):
         sys.exit(1)
     return texts
 
+def infer_utterance(model, vectorizer, label_encoder, metadata, utterance):
+    if utterance is None:
+        raise ValueError("utterance must be provided")
+
+    # Vectorize the single utterance and decode the predicted class label
+    features = vectorizer.transform([utterance])
+    prediction = model.predict(features)
+    label = label_encoder.inverse_transform(prediction)[0]
+
+    return str(label)
 
 def main():
     parser = argparse.ArgumentParser(description="Infer dialog acts using a saved model")

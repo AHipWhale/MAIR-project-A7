@@ -1,5 +1,8 @@
 import random
 import pandas as pd
+from pathlib import Path
+from infer import infer_utterance, load_artifacts
+from keyword_extractor import extract_keywords
 
 class dialogAgent():
     def __init__(self, model_path=None, restaurant_path="datasets/restaurant_info.csv"):
@@ -7,6 +10,7 @@ class dialogAgent():
         Initialize dialog agent
         """
         # Load in ML model or train ML model (based on input)
+        self.model, self.vectorizer, self.label_encoder, self.metadata = load_artifacts(Path(model_path))
         ... # model_path
 
         # Save path to restaurant info file
@@ -75,9 +79,15 @@ class dialogAgent():
         response_utterance = None
 
         # Classify dialog act (could be call to function)
-        classified_dialog_act = ...
+        utterance = "I want a restaurant serving Swedish food"
+        classified_dialog_act = infer_utterance(self.model, self.vectorizer, self.label_encoder, self.metadata, utterance)
 
         # Extract info based on dialog act (could be call to function)
+        if classified_dialog_act == 'inform':
+            output = extract_keywords(utterance)
+            self.area = output['area']
+            self.price = output['pricerange']
+            self.food = output['food']
         ...
         
         # State transitions
@@ -183,6 +193,6 @@ class dialogAgent():
         return next_state, response_utterance
 
 if __name__ == "__main__":
-    agent = dialogAgent()
+    agent = dialogAgent(model_path='artifacts/dt')
     agent.start_dialog()
 
