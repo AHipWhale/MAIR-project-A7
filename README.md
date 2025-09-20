@@ -5,6 +5,11 @@ Project for dialog act classification with simple data prep utilities and a trai
 # Getting Started
 Before running any code, please install the right packages by running `pip install -r requirements.txt`.
 
+# Dialog Management System
+The Dialog Management System is located in `dialog_agent.py`. To run the dialog management system, run that file. By default it uses a decision tree model saved in `artifacts/dt` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
+<br><br>
+If you want to see what information the system saves and what states it transitions into, set `debug_mode=True`, default: `debug_mode=False` when making a new instance of the dialogAgent class. Example: `agent = dialogAgent(model_path='artifacts/dt', debug_mode=True)`
+
 # Baseline Models
 All code for this part can be found in `baseline_models_code`.
 
