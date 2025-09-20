@@ -33,6 +33,9 @@ class dialogAgent():
         self.debug_mode = debug_mode
 
     def start_dialog(self):
+        """
+        Loop state transition function until the end state "9.1 Goodbye" is reached and ask for user input after each state transition.
+        """
         # Loop state_transition until certain state is reached (end state)
         state = None
         user_input = None
@@ -73,15 +76,20 @@ class dialogAgent():
         # Convert to dict for better usage
         matches_dict = matches.to_dict(orient="records") 
 
-        # print(f"Matches: {matches_dict}") # debug
+        if self.debug_mode:
+            print(f"Matches: {matches_dict}") # debug
+
         return matches_dict
         
 
     def __state_transition(self, current_state: str, utterance: str) -> tuple:
+        """
+        Classifies dialog act, extract information from utterances using keywords and transition to the next state based on important variables. Output is a tuple with the next state and the system response utterance. 
+        """
         next_state = None
         response_utterance = None
 
-        # Classify dialog act (could be call to function)
+        # Classify dialog act only is there is an utterance otherwise it would result into an error
         if utterance != None:
             classified_dialog_act = infer_utterance(self.model, self.vectorizer, self.label_encoder, self.metadata, utterance)
 
@@ -151,7 +159,7 @@ class dialogAgent():
                 
             possible_restaurant_count = len(possible_restaurants)
 
-            if possible_restaurant_count == 0:
+            if possible_restaurant_count == 0: # If there are no restaurants that meet requirements
                 # State "5.2 Change 1 of preferences"
                 next_state = "5.2 Change 1 of preferences"
                 response_utterance = "There are no restaurants that meet your requirements. Would you like to change the area, pricerange or foodtype? And what would you like to change it to?"
@@ -160,10 +168,10 @@ class dialogAgent():
                     print("Entered State '5.2 Change 1 of preferences'")
 
             else:
-                if possible_restaurant_count == 1:
+                if possible_restaurant_count == 1: # If there is one restaurant that meet requirements
                     self.sugg_restaurant = possible_restaurants[0]
                     response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. Would you like some infromation about this restaurant?"
-                else:
+                else: # If there are multiple restaurants that meet requirements
                     # Choose random restaurant and save the others
                     self.sugg_restaurant = random.choice(possible_restaurants)
                     self.restaurants = possible_restaurants
