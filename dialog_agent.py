@@ -100,6 +100,7 @@ class dialogAgent():
             classified_dialog_act = ""
 
         # Extract info based on dialog act (could be call to function)
+        # only change value to 'dontcare' for the assiciated current state
         if classified_dialog_act == 'inform':
             output = extract_keywords(utterance)
             if output['area'] != None:
