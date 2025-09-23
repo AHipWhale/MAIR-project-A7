@@ -103,11 +103,14 @@ class dialogAgent():
         if classified_dialog_act == 'inform':
             output = extract_keywords(utterance)
             if output['area'] != None:
-                self.area = output['area']
+                if (output['area'] == 'dontcare' and current_state == "2.2 Ask Area") or output['area'] != 'dontcare':
+                    self.area = output['area']
             if output["pricerange"] != None:
-                self.price = output['pricerange']
+                if (output['pricerange'] == 'dontcare' and current_state == "3.2 Ask price") or output['pricerange'] != 'dontcare':
+                    self.price = output['pricerange']
             if output["food"] != None:
-                self.food = output['food']
+                if (output['food'] == 'dontcare' and current_state == "4.2 Ask Food type") or output['food'] != 'dontcare':
+                    self.food = output['food']
 
             if self.debug_mode:
                 print(f"Area changed to: {self.area}") # debug
@@ -237,7 +240,7 @@ class dialogAgent():
 
 
         # To exit programme (DEBUG)
-        if utterance == "exit":
+        if utterance == "exit" and self.debug_mode:
             next_state = "9.1 Goodbye"
             response_utterance = "Goodbye!"
         
