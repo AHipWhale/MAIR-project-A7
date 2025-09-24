@@ -1,0 +1,39 @@
+[
+    {
+        "antecedent": "cheap AND good food",
+        "consequent": "touristic",
+        "t/f": true,
+        "description": "a cheap restaurant with good food attracts tourists"
+    },
+    {
+        "antecendent": "romanian",
+        "consequent": "touristic",
+        "t/f": false,
+        "description": "Romanian cuisine is unknown for most tourists and they prefer familiar food"
+    },
+    {
+        "antecendent": "busy",
+        "consequent": "assigned seats",
+        "t/f": true,
+        "description": "in an busy restaurant the waiter decides where you sit"
+    },
+    {
+        "antecendent": "long stay",
+        "consequent": "children",
+        "t/f": false,
+        "description": "spending a long time in a restaurant is not advised when taking children"
+    },
+    {
+        "antecendent": "busy",
+        "consequent": "romantic",
+        "t/f": false,
+        "description": "a busy restaurant is not romantic"
+    },
+    {
+        "antecendent": "long stay",
+        "consequent": "romantic",
+        "t/f": true,
+        "description": "spending a long time in a restaurant is romantic"
+    }
+
+]
