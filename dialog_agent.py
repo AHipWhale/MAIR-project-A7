@@ -52,6 +52,8 @@ class dialogAgent():
 
                 # User input
                 user_input = input("user: ").strip().lower()
+
+    def __
     
     def __look_up_restaurants(self, area: str = None , priceRange: str = None, food_type: str = None) -> list:
         """
