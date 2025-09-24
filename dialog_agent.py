@@ -3,6 +3,7 @@ import pandas as pd
 from pathlib import Path
 from infer import infer_utterance, load_artifacts
 from keyword_extractor import extract_keywords
+from expand_csv import expand_csv
 
 class dialogAgent():
     def __init__(self, model_path=None, restaurant_path="datasets/restaurant_info.csv", debug_mode=False):
@@ -253,6 +254,9 @@ class dialogAgent():
         return next_state, response_utterance
 
 if __name__ == "__main__":
+    # expand csv to include 3 new columns: food_quality, crowdedness, length_of_stay
+    expand_csv(Path("datasets/restaurant_info.csv"), Path("datasets/expanded_restaurant_info.csv"))
+
     agent = dialogAgent(model_path='artifacts/dt')
     agent.start_dialog()
 
