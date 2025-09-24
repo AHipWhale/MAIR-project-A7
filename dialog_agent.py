@@ -1,3 +1,4 @@
+import json
 import random
 import pandas as pd
 from pathlib import Path
@@ -16,6 +17,18 @@ class dialogAgent():
         # Save path to restaurant info file
         self.restaurant_info_path = restaurant_path
         
+        # Load configuration toggle for confirmation prompts
+        config_path = Path("config.json")
+        config_flag_key = "Ask confirmation for each preference or not"
+        confirm_flag = False
+        if config_path.exists():
+            try:
+                with config_path.open("r", encoding="utf-8") as config_file:
+                    config_data = json.load(config_file)
+                    confirm_flag = config_data.get(config_flag_key, False)
+            except (json.JSONDecodeError, OSError):
+                confirm_flag = False
+
         # Initialize important variables
         self.area = None
         self.price = None
@@ -32,6 +45,14 @@ class dialogAgent():
 
         # For debugging during development
         self.debug_mode = debug_mode
+
+        # Confirmation toggle and temporary storage
+        self.confirm_preferences = confirm_flag
+        self.pending_slot = None
+        self.pending_value = None
+        self.pending_state = None
+        self.pending_prompt = None
+        self.pending_message = None
 
     def start_dialog(self):
         """
@@ -83,6 +104,22 @@ class dialogAgent():
         return matches_dict
         
 
+    def confirm_each_preference(self, slot: str, value: str, ask_state: str, prompt: str) -> tuple:
+        """
+        Store pending preference and return confirmation state output.
+        """
+        chosen_value = "don't care" if value == "dontcare" else value
+        message = f"You chose {slot} {chosen_value}. Is that correct?"
+
+        self.pending_slot = slot
+        self.pending_value = value
+        self.pending_state = ask_state
+        self.pending_prompt = prompt
+        self.pending_message = message
+
+        return "Confirm preference", message
+
+
     def __state_transition(self, current_state: str, utterance: str) -> tuple:
         """
         Classifies dialog act, extract information from utterances using keywords and transition to the next state based on important variables. Output is a tuple with the next state and the system response utterance. 
@@ -100,18 +137,88 @@ class dialogAgent():
         else:
             classified_dialog_act = ""
 
+        confirm_intents = {"confirm", "affirm"}
+        deny_intents = {"deny", "negate"}
+
+        if self.confirm_preferences and current_state == "Confirm preference":
+            if self.pending_slot is None:
+                # No pending information; resume normal flow
+                current_state = self.pending_state or current_state
+            elif classified_dialog_act in confirm_intents:
+                setattr(self, self.pending_slot, self.pending_value)
+
+                if self.debug_mode:
+                    print(f"{self.pending_slot.capitalize()} confirmed as: {self.pending_value}")
+
+                current_state = self.pending_state or current_state
+
+                self.pending_slot = None
+                self.pending_value = None
+                self.pending_state = None
+                self.pending_prompt = None
+                self.pending_message = None
+
+                classified_dialog_act = ""
+            elif classified_dialog_act in deny_intents:
+                next_state = self.pending_state or "1. Welcome"
+                response_utterance = self.pending_prompt or "Could you repeat that preference?"
+
+                self.pending_slot = None
+                self.pending_value = None
+                self.pending_state = None
+                self.pending_prompt = None
+                self.pending_message = None
+
+                self.state_history.append(next_state)
+                return next_state, response_utterance
+            else:
+                next_state = "Confirm preference"
+                response_utterance = self.pending_message or "Please answer yes or no so I can confirm."
+                self.state_history.append(next_state)
+                return next_state, response_utterance
+
         # Extract info based on dialog act (could be call to function)
         # only change value to 'dontcare' for the assiciated current state
         if classified_dialog_act == 'inform':
             output = extract_keywords(utterance)
             if output['area'] != None:
                 if (output['area'] == 'dontcare' and current_state == "2.2 Ask Area") or output['area'] != 'dontcare':
+                    if self.confirm_preferences:
+                        next_state, response_utterance = self.confirm_each_preference(
+                            "area",
+                            output['area'],
+                            "2.2 Ask Area",
+                            "What part of town do you have in mind?",
+                        )
+                        self.state_history.append(next_state)
+                        return next_state, response_utterance
+
                     self.area = output['area']
             if output["pricerange"] != None:
                 if (output['pricerange'] == 'dontcare' and current_state == "3.2 Ask price") or output['pricerange'] != 'dontcare':
+                    if self.confirm_preferences:
+                        next_state, response_utterance = self.confirm_each_preference(
+                            "price",
+                            output['pricerange'],
+                            "3.2 Ask price",
+                            "How pricy would you like the restaurant to be?",
+                        )
+                        self.state_history.append(next_state)
+                        return next_state, response_utterance
+
                     self.price = output['pricerange']
             if output["food"] != None:
                 if (output['food'] == 'dontcare' and current_state == "4.2 Ask Food type") or output['food'] != 'dontcare':
+                    if self.confirm_preferences:
+                        next_state, response_utterance = self.confirm_each_preference(
+                            "food",
+                            output['food'],
+                            "4.2 Ask Food type",
+                            "What kind of food would you like?",
+                        )
+                        self.state_history.append(next_state)
+                        return next_state, response_utterance
+
                     self.food = output['food']
 
             if self.debug_mode:
@@ -259,4 +366,3 @@ if __name__ == "__main__":
 
     agent = dialogAgent(model_path='artifacts/dt')
     agent.start_dialog()
-
