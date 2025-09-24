@@ -156,11 +156,21 @@ class dialogAgent():
             if self.debug_mode:
                 print("Entered State '4.2 Ask Food type'")
         
+        # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" to "..." (additional preferences)
+        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
+            # State "..." (additional preferences)
+            next_state = "..." #(additional preferences)
+            response_utterance = "Do you have any additional preferences?"
+
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" or "5.2 Change 1 of preferences" to "5.2 Change 1 of preferences" or "6.1 Suggest restaurant"
         elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type", "5.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 5.1 Is there a match
             # Look up possible restaurants that meet requirements
             possible_restaurants = self.__look_up_restaurants(self.area, self.price, self.food)
-                
+            
+            # Check if restaurant meet additional requirements
+                # new function to check additional requirements based on reasonong_rules.json and possible_restaurants 
+            ...
+
             possible_restaurant_count = len(possible_restaurants)
 
             if possible_restaurant_count == 0: # If there are no restaurants that meet requirements
