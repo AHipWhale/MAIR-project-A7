@@ -3,9 +3,16 @@ import pandas as pd
 from pathlib import Path
 from infer import infer_utterance, load_artifacts
 from keyword_extractor import extract_keywords
+from expand_csv import expand_csv
 
 class dialogAgent():
-    def __init__(self, model_path=None, restaurant_path="datasets/restaurant_info.csv", debug_mode=False):
+    def __init__(
+        self,
+        model_path=None,
+        restaurant_path="datasets/restaurant_info.csv",
+        debug_mode=False,
+        confirm_preferences=True,
+    ):
         """
         Initialize dialog agent
         """
@@ -53,8 +60,6 @@ class dialogAgent():
                 # User input
                 user_input = input("user: ").strip().lower()
 
-    def __
-    
     def __look_up_restaurants(self, area: str = None , priceRange: str = None, food_type: str = None) -> list:
         """
         Look up restaurants from database, based on given requirements
@@ -82,7 +87,6 @@ class dialogAgent():
             print(f"Matches: {matches_dict}") # debug
 
         return matches_dict
-        
 
     def __state_transition(self, current_state: str, utterance: str) -> tuple:
         """
@@ -101,25 +105,16 @@ class dialogAgent():
         else:
             classified_dialog_act = ""
 
-        # Extract info based on dialog act (could be call to function)
-        # only change value to 'dontcare' for the assiciated current state
-        if classified_dialog_act == 'inform':
-            output = extract_keywords(utterance)
-            if output['area'] != None:
-                if (output['area'] == 'dontcare' and current_state == "2.2 Ask Area") or output['area'] != 'dontcare':
-                    self.area = output['area']
-            if output["pricerange"] != None:
-                if (output['pricerange'] == 'dontcare' and current_state == "3.2 Ask price") or output['pricerange'] != 'dontcare':
-                    self.price = output['pricerange']
-            if output["food"] != None:
-                if (output['food'] == 'dontcare' and current_state == "4.2 Ask Food type") or output['food'] != 'dontcare':
-                    self.food = output['food']
+        handled, classified_dialog_act, next_state, response_utterance = self.__handle_slot_confirmation(
+            classified_dialog_act,
+            current_state,
+            utterance,
+        )
 
-            if self.debug_mode:
-                print(f"Area changed to: {self.area}") # debug
-                print(f"Price changed to: {self.price}") # debug
-                print(f"Food changed to: {self.food}") # debug
-        
+        if handled:
+            self.state_history.append(next_state)
+            return next_state, response_utterance
+
         # State transitions
 
         # State 0 to "1. Welcome"
@@ -255,6 +250,8 @@ class dialogAgent():
         return next_state, response_utterance
 
 if __name__ == "__main__":
+    # expand csv to include 3 new columns: food_quality, crowdedness, length_of_stay
+    expand_csv(Path("datasets/restaurant_info.csv"), Path("datasets/expanded_restaurant_info.csv"))
+
     agent = dialogAgent(model_path='artifacts/dt')
     agent.start_dialog()
-
