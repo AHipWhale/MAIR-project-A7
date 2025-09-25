@@ -56,6 +56,11 @@ class dialogAgent():
         # Confirmation toggle and temporary storage for pending slot confirmations.
         self.confirm_preferences = confirm_flag
         self.allow_restart = restart_flag
+        # The following fields track whichever slot/value is being confirmed:
+        # - pending_slot/pending_value store the slot name and proposed value currently awaiting yes/no.
+        # - pending_state/pending_prompt let us fall back to the original question if the user says "no".
+        # - pending_message is the confirmation prompt we just asked.
+        # - pending_queue holds any additional slot updates captured in the same utterance so we can confirm them sequentially.
         self.pending_slot = None
         self.pending_value = None
         self.pending_state = None
@@ -117,6 +122,9 @@ class dialogAgent():
     def __confirm_each_preference(self, slot: str, value: str, ask_state: str, prompt: str) -> tuple:
         """
         Store pending preference and return confirmation state output.
+        pending_slot/pending_value store the slot name and proposed value currently awaiting yes/no.
+        pending_state/pending_prompt let us fall back to the original question if the user says "no".
+        pending_message is the confirmation prompt we just asked.
         """
         chosen_value = "don't care" if value == "dontcare" else value
         message = f"You chose {slot} {chosen_value}. Is that correct?"
@@ -151,7 +159,7 @@ class dialogAgent():
         self.price = None
         self.food = None
         self.restaurants = []
-        self.sugg_restaurant = None
+        self.sugg_restaurant = None 
         self.state_history = []
         self.pending_slot = None
         self.pending_value = None
@@ -259,6 +267,7 @@ class dialogAgent():
                 return next_state, response_utterance
             else:
                 next_state = "Confirm preference"
+                # Re-ask whichever confirmation message is currently pending.
                 response_utterance = self.pending_message or "Please answer yes or no so I can confirm."
                 self.state_history.append(next_state)
                 return next_state, response_utterance
