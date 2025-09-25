@@ -6,6 +6,7 @@ from infer import infer_utterance, load_artifacts
 from keyword_extractor import extract_keywords
 from expand_csv import expand_csv
 
+# Shared greeting reused for both the initial turn and any restart.
 WELCOME_MESSAGE = "Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?"
 
 class dialogAgent():
@@ -19,7 +20,7 @@ class dialogAgent():
         # Save path to restaurant info file
         self.restaurant_info_path = restaurant_path
         
-        # Load configuration toggles
+        # Load configuration toggles so behaviour can be switched without code changes.
         config_path = Path("config.json")
         confirm_key = "Ask confirmation for each preference or not"
         restart_key = "Allow dialog restarts or not"
@@ -52,7 +53,7 @@ class dialogAgent():
         # For debugging during development
         self.debug_mode = debug_mode
 
-        # Confirmation toggle and temporary storage
+        # Confirmation toggle and temporary storage for pending slot confirmations.
         self.confirm_preferences = confirm_flag
         self.allow_restart = restart_flag
         self.pending_slot = None
@@ -60,6 +61,8 @@ class dialogAgent():
         self.pending_state = None
         self.pending_prompt = None
         self.pending_message = None
+        self.pending_queue = []
+        self.pending_queue = []
 
     def start_dialog(self):
         """
@@ -127,8 +130,23 @@ class dialogAgent():
         return "Confirm preference", message
 
 
+    def __start_next_confirmation(self):
+        """Pop and start the next queued confirmation if available."""
+        if not self.pending_queue:
+            return None, None
+
+        entry = self.pending_queue.pop(0)
+        return self.__confirm_each_preference(
+            entry["slot"],
+            entry["value"],
+            entry["ask_state"],
+            entry["prompt"],
+        )
+
+
     def __reset_dialog(self) -> None:
         """Reset collected preferences and confirmation state."""
+        # Clear everything the confirmation flow tracks so a restart starts fresh.
         self.area = None
         self.price = None
         self.food = None
@@ -160,6 +178,7 @@ class dialogAgent():
             classified_dialog_act = ""
 
         if self.allow_restart and utterance:
+            # Lightweight keyword fallback in case the classifier misses the restart intent.
             normalized_utt = utterance.lower()
             restart_phrases = ["restart", "start over", "start again", "reset"]
             if classified_dialog_act not in {"restart"}:
@@ -182,31 +201,34 @@ class dialogAgent():
         deny_intents = {"deny", "negate"}
 
         if self.confirm_preferences and current_state == "Confirm preference" and utterance:
+            # Allow simple yes/no replies even when the classifier mislabels them.
             normalized_utt = utterance.lower().strip()
             yes_words = {"yes", "yeah", "yep", "sure", "correct", "absolutely", "affirmative", "right"}
             no_words = {"no", "nope", "nah", "negative", "not really", "don't"}
 
             if classified_dialog_act not in confirm_intents | deny_intents:
-                if normalized_utt in yes_words:
+                first_word = normalized_utt.split()[0]
+                if normalized_utt in yes_words or first_word in yes_words:
                     if self.debug_mode:
                         print("Detected manual confirmation keyword.")
                     classified_dialog_act = "confirm"
-                elif normalized_utt in no_words:
+                elif normalized_utt in no_words or first_word in no_words:
                     if self.debug_mode:
                         print("Detected manual denial keyword.")
                     classified_dialog_act = "deny"
 
         if self.confirm_preferences and current_state == "Confirm preference":
             if self.pending_slot is None:
-                # No pending information; resume normal flow
                 current_state = self.pending_state or current_state
             elif classified_dialog_act in confirm_intents:
-                setattr(self, self.pending_slot, self.pending_value)
+                resolved_state = self.pending_state or current_state
+                slot_to_set = self.pending_slot
+                value_to_set = self.pending_value
+
+                setattr(self, slot_to_set, value_to_set)
 
                 if self.debug_mode:
-                    print(f"{self.pending_slot.capitalize()} confirmed as: {self.pending_value}")
-
-                current_state = self.pending_state or current_state
+                    print(f"{slot_to_set.capitalize()} confirmed as: {value_to_set}")
 
                 self.pending_slot = None
                 self.pending_value = None
@@ -214,6 +236,13 @@ class dialogAgent():
                 self.pending_prompt = None
                 self.pending_message = None
 
+                # Continue with the next queued confirmation if we captured multiple slots.
+                next_state, next_message = self.__start_next_confirmation()
+                if next_state:
+                    self.state_history.append(next_state)
+                    return next_state, next_message
+
+                current_state = resolved_state
                 classified_dialog_act = ""
             elif classified_dialog_act in deny_intents:
                 next_state = self.pending_state or "1. Welcome"
@@ -224,6 +253,7 @@ class dialogAgent():
                 self.pending_state = None
                 self.pending_prompt = None
                 self.pending_message = None
+                self.pending_queue = []
 
                 self.state_history.append(next_state)
                 return next_state, response_utterance
@@ -237,45 +267,57 @@ class dialogAgent():
         # only change value to 'dontcare' for the assiciated current state
         if classified_dialog_act == 'inform':
             output = extract_keywords(utterance)
+            captured_entries = []
+
             if output['area'] != None:
                 if (output['area'] == 'dontcare' and current_state == "2.2 Ask Area") or output['area'] != 'dontcare':
                     if self.confirm_preferences:
-                        next_state, response_utterance = self.__confirm_each_preference(
-                            "area",
-                            output['area'],
-                            "2.2 Ask Area",
-                            "What part of town do you have in mind?",
-                        )
-                        self.state_history.append(next_state)
-                        return next_state, response_utterance
+                        captured_entries.append({
+                            "slot": "area",
+                            "value": output['area'],
+                            "ask_state": "2.2 Ask Area",
+                            "prompt": "What part of town do you have in mind?",
+                        })
+                    else:
+                        self.area = output['area']
 
-                    self.area = output['area']
             if output["pricerange"] != None:
                 if (output['pricerange'] == 'dontcare' and current_state == "3.2 Ask price") or output['pricerange'] != 'dontcare':
                     if self.confirm_preferences:
-                        next_state, response_utterance = self.__confirm_each_preference(
-                            "price",
-                            output['pricerange'],
-                            "3.2 Ask price",
-                            "How pricy would you like the restaurant to be?",
-                        )
-                        self.state_history.append(next_state)
-                        return next_state, response_utterance
+                        captured_entries.append({
+                            "slot": "price",
+                            "value": output['pricerange'],
+                            "ask_state": "3.2 Ask price",
+                            "prompt": "How pricy would you like the restaurant to be?",
+                        })
+                    else:
+                        self.price = output['pricerange']
 
-                    self.price = output['pricerange']
             if output["food"] != None:
                 if (output['food'] == 'dontcare' and current_state == "4.2 Ask Food type") or output['food'] != 'dontcare':
                     if self.confirm_preferences:
-                        next_state, response_utterance = self.__confirm_each_preference(
-                            "food",
-                            output['food'],
-                            "4.2 Ask Food type",
-                            "What kind of food would you like?",
-                        )
+                        captured_entries.append({
+                            "slot": "food",
+                            "value": output['food'],
+                            "ask_state": "4.2 Ask Food type",
+                            "prompt": "What kind of food would you like?",
+                        })
+                    else:
+                        self.food = output['food']
+
+            if self.confirm_preferences and captured_entries:
+                self.pending_queue.extend(captured_entries)
+
+                if self.pending_slot is None:
+                    next_state, response_utterance = self.__start_next_confirmation()
+                    if next_state:
                         self.state_history.append(next_state)
                         return next_state, response_utterance
 
-                    self.food = output['food']
+                next_state = "Confirm preference"
+                response_utterance = self.pending_message or "Please answer yes or no so I can confirm."
+                self.state_history.append(next_state)
+                return next_state, response_utterance
 
             if self.debug_mode:
                 print(f"Area changed to: {self.area}") # debug
@@ -420,5 +462,5 @@ if __name__ == "__main__":
     # expand csv to include 3 new columns: food_quality, crowdedness, length_of_stay
     expand_csv(Path("datasets/restaurant_info.csv"), Path("datasets/expanded_restaurant_info.csv"))
 
-    agent = dialogAgent(model_path='artifacts/dt')
+    agent = dialogAgent(model_path='artifacts/dt', debug_mode=True)
     agent.start_dialog()
