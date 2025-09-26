@@ -6,7 +6,7 @@ import random
 from pathlib import Path
 
 food_quality_options = ("mediocre", "good", "great")
-crowdedness_options = ("low", "medium", "high")
+crowdedness_options = ("low", "medium", "busy")
 length_of_stay_options = ("short", "medium", "long")
 
 

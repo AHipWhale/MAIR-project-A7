@@ -19,6 +19,9 @@ class dialogAgent():
 
         # Save path to restaurant info file
         self.restaurant_info_path = restaurant_path
+        # If the expanded file exists, use that one instead
+        if Path(restaurant_path.replace('restaurant_info', 'expanded_restaurant_info')).exists():
+            self.restaurant_info_path = restaurant_path.replace('restaurant_info', 'expanded_restaurant_info')
         
         # Load configuration toggles so behaviour can be switched without code changes.
         config_path = Path("config.json")
