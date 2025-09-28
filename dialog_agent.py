@@ -3,9 +3,10 @@ import pandas as pd
 from pathlib import Path
 from infer import infer_utterance, load_artifacts
 from keyword_extractor import extract_keywords
+import json
 
 class dialogAgent():
-    def __init__(self, model_path=None, restaurant_path="datasets/restaurant_info.csv", debug_mode=False):
+    def __init__(self, model_path=None, restaurant_path="datasets/restaurant_info.csv", reasoning_rules_path="reasoning_rules.json", debug_mode=False):
         """
         Initialize dialog agent
         """
@@ -31,6 +32,17 @@ class dialogAgent():
 
         # For debugging during development
         self.debug_mode = debug_mode
+
+        # Load in reasoning rules 
+        with open(reasoning_rules_path, 'r') as file:
+            data = json.load(file)
+        self.reasoning_rules = json.dumps(data, indent=4)
+
+        # initialize additional preferences
+        self.romantic = None
+        self.children = None
+        self.assigned_seats = None
+        self.touristic = None
 
     def start_dialog(self):
         """
@@ -80,7 +92,64 @@ class dialogAgent():
             print(f"Matches: {matches_dict}") # debug
 
         return matches_dict
-        
+    
+    def __reasoning_rules_filter(self, possible_restaurants: list) -> list:
+        # keyword extracter
+
+        for restaurant in possible_restaurants:
+            remove_resaurant = False
+
+            if self.touristic:
+                # cheap and good food = True
+                # romanian = False
+
+                if restaurant["food"] == "romanian":
+                    romanian = True
+                else:
+                    romanian = False
+                
+                if restaurant["pricerange"] == "cheap" and restaurant["food_quality"] == "good":
+                    cheap_good = True
+                else:
+                    cheap_good = False
+
+                if romanian: # romanian priority over cheap and good
+                    remove_resaurant = True
+                elif cheap_good == False:
+                    remove_resaurant = True
+
+            if self.assigned_seats:
+                # busy = True
+                if restaurant["crowdedness"] != "busy":
+                    remove_resaurant = True
+
+            if self.children:
+                # Long stay = False
+                if restaurant["length_of_stay"] == "long":
+                    remove_resaurant = True
+
+            if self.romantic:
+                # busy = False
+                # Long stay = True
+                if restaurant["crowdedness"] == "busy":
+                    busy = True
+                else:
+                    busy != True
+
+                if restaurant["length_of_stay"] == "long":
+                    long_stay = True
+                else:
+                    long_stay = False
+                
+                if long_stay == False: # long stay priority over busy
+                    remove_resaurant = True
+                elif busy:
+                    remove_resaurant = True
+
+                if remove_resaurant:
+                    possible_restaurants.remove(restaurant)
+
+        return possible_restaurants
 
     def __state_transition(self, current_state: str, utterance: str) -> tuple:
         """
@@ -156,20 +225,49 @@ class dialogAgent():
             if self.debug_mode:
                 print("Entered State '4.2 Ask Food type'")
         
-        # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" to "..." (additional preferences)
+        # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" to "4.1 Ask for additional preferences" (additional preferences)
         elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
             # State "..." (additional preferences)
-            next_state = "..." #(additional preferences)
+            next_state = "4.1 Ask for additional preferences" #(additional preferences)
             response_utterance = "Do you have any additional preferences?"
 
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" or "5.2 Change 1 of preferences" to "5.2 Change 1 of preferences" or "6.1 Suggest restaurant"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type", "5.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 5.1 Is there a match
+        elif current_state in ["4.1 Ask for additional preferences", "5.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 5.1 Is there a match
+            if current_state == "4.1 Ask for additional preferences":
+                # extract preferences from utterance
+                if "romantic" in utterance:
+                    # if "not" in utterance:
+                    #     self.romantic = False
+                    # else:
+                    self.romantic = True
+                
+                if "children" in utterance:
+                    # if "not" in utterance:
+                    #     self.children = False
+                    # else:
+                    self.children = True
+                
+                if "assigned" in utterance and "seats" in utterance:
+                    # if "not" in utterance:
+                    #     self.assigned_seats = False
+                    # else:
+                    self.assigned_seats = True
+                
+                if "touristic" in utterance:
+                    # if "not" in utterance:
+                    #     self.touristic = False
+                    # else:
+                    self.touristic = True
+                
+            
             # Look up possible restaurants that meet requirements
             possible_restaurants = self.__look_up_restaurants(self.area, self.price, self.food)
             
             # Check if restaurant meet additional requirements
                 # new function to check additional requirements based on reasonong_rules.json and possible_restaurants 
-            ...
+            filtered_possible_restaurants = self.__reasoning_rules_filter(possible_restaurants)
+
+            print("filtered_pos_restaurants", filtered_possible_restaurants)
 
             possible_restaurant_count = len(possible_restaurants)
 
@@ -263,6 +361,6 @@ class dialogAgent():
         return next_state, response_utterance
 
 if __name__ == "__main__":
-    agent = dialogAgent(model_path='artifacts/dt')
+    agent = dialogAgent(model_path='artifacts/dt', debug_mode=True)
     agent.start_dialog()
 
