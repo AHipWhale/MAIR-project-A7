@@ -484,14 +484,6 @@ class dialogAgent():
             if self.debug_mode:
                 print("Entered State 'Fill Slots")
         
-        # # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4,2 Ask Food type" to "4.2 Ask Food type"
-        # elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.food == None: # 4.1 Food type known?
-        #     # State "4.2 Ask Food type"
-        #     next_state = "4.2 Ask Food type"
-        #     response_utterance = "What kind of food would you like?"
-
-        #     if self.debug_mode:
-        #         print("Entered State '4.2 Ask Food type'")
         
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" to "4.1 Ask for additional preferences" (additional preferences)
         elif current_state in ["1. Welcome", "2.2 Fill slots"] and self.area != None and self.price != None and self.food != None:
