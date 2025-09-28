@@ -97,7 +97,8 @@ class dialogAgent():
 
             if state != "9.1 Goodbye":
                 # Ouput system_utterance
-                print(f"system: {system_utterance}")
+                if system_utterance:
+                    print(f"system: {system_utterance}")
 
                 # User input
                 user_input = input("user: ").strip().lower()
@@ -266,8 +267,13 @@ class dialogAgent():
                     self.state_history.append(next_state)
                     return next_state, next_message
 
-                current_state = resolved_state
-                classified_dialog_act = ""
+                # No more confirmations, continue to fill slots / lookup
+                next_state = "2.2 Fill slots"
+                response_utterance = None
+                self.state_history.append(next_state)
+                return next_state, response_utterance
+                
+                
             elif classified_dialog_act in deny_intents:
                 next_state = self.pending_state or "1. Welcome"
                 response_utterance = self.pending_prompt or "Could you repeat that preference?"
@@ -364,7 +370,7 @@ class dialogAgent():
                 print("Entered State '1. Welcome'")
         
         # State 2.2 Fill slots
-        elif current_state in ["1. Welcome", "2. Fill slots"] and (self.area == None or self.price == None or self.food == None): # Go to the slots phase
+        elif current_state in ["1. Welcome", "2.2 Fill slots"] and (self.area == None or self.price == None or self.food == None): # Go to the slots phase
             # Check witch slots need to be filled
             remaining_slots = []
             if self.area == None:
@@ -383,16 +389,16 @@ class dialogAgent():
         
                 # Ask Area
                 if next_slot == "area":
-                    next_state = "2. Fill slots"
+                    next_state = "2.2 Fill slots"
                     if self.informal_flag:
-                        next_state = "2. Fill slots"
+                        next_state = "2.2 Fill slots"
                         response_utterance = "Where about in town do you wanna eat?"
                     else:
                         response_utterance= "Which part of town would you like the restaurant to be located?"
 
                 # Ask Price
                 if next_slot == "price":
-                    next_state = "2. Fill slots"
+                    next_state = "2.2 Fill slots"
                     if self.informal_flag:
                        response_utterance = "How pricey do you want your meal to be?"
                     else:
@@ -400,8 +406,8 @@ class dialogAgent():
             
             # Ask Food type
                 if next_slot == "food":
-                    next_state = "2. Fill slots"
-                    next_state = "2. Fill slots"
+                    next_state = "2.2 Fill slots"
+                    next_state = "2.2 Fill slots"
                     if self.informal_flag:
                        response_utterance = "What kind of food are you in the mood for?"
                     else:
