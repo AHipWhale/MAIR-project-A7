@@ -1,0 +1,130 @@
+from collections import Counter
+from pathlib import Path
+from typing import Dict, Iterable, List, Sequence, Tuple, Union
+
+import pandas as pd
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
+
+
+def load_data_to_df(path: Union[Path, str]) -> pd.DataFrame:
+    """Load dialog-act data into a DataFrame with columns `label` and `text`."""
+    data_path = Path(path)
+    rows: List[Tuple[str, str]] = []
+
+    with data_path.open("r", encoding="utf-8") as fh:
+        for raw_line in fh:
+            line = raw_line.strip()
+            if not line:
+                continue
+
+            pieces = line.split(maxsplit=1)
+            if len(pieces) != 2:
+                # Skip malformed rows to avoid downstream errors.
+                continue
+            label, text = pieces
+            rows.append((label, text))
+
+    return pd.DataFrame(rows, columns=["label", "text"])
+
+
+def stratified_split(
+    df: pd.DataFrame, test_size: float = 0.15, seed: Union[int, None] = 42
+) -> Tuple[List[str], List[str], List[str], List[str]]:
+    """Split texts/labels into stratified train/test partitions."""
+    x_train, x_test, y_train, y_test = train_test_split(
+        df["text"].tolist(),
+        df["label"].tolist(),
+        test_size=test_size,
+        random_state=seed,
+        stratify=df["label"],
+    )
+    return x_train, x_test, y_train, y_test
+
+
+def vectorize_fit_transform(
+    vectorizer: CountVectorizer,
+    x_train: Sequence[str],
+    x_test: Sequence[str],
+):
+    """Fit vectorizer on train split and transform both splits."""
+    x_train_transformed = vectorizer.fit_transform(x_train)
+    x_test_transformed = vectorizer.transform(x_test)
+    return x_train_transformed, x_test_transformed
+
+
+def encode_labels(
+    encoder: LabelEncoder,
+    y_train: Sequence[str],
+    y_test: Sequence[str],
+):
+    """Fit label encoder on train split and transform both splits."""
+    y_train_encoded = encoder.fit_transform(y_train)
+    y_test_encoded = encoder.transform(y_test)
+    return y_train_encoded, y_test_encoded
+
+
+def summarize_labels(
+    y_train: Iterable[str],
+    y_test: Iterable[str],
+) -> Tuple[Dict[str, int], Dict[str, int]]:
+    """Print and return class distribution summary for train/test splits."""
+    print("--## Dataset Summary ##--")
+    y_train_list = list(y_train)
+    y_test_list = list(y_test)
+    train_counts = dict(
+        sorted(Counter(y_train_list).items(), key=lambda kv: kv[1], reverse=True)
+    )
+    test_counts = dict(
+        sorted(Counter(y_test_list).items(), key=lambda kv: kv[1], reverse=True)
+    )
+
+    print(
+        f"Train: total={len(y_train_list)}, unique={len(train_counts)}, counts={train_counts}"
+    )
+    print(
+        f"Test:  total={len(y_test_list)}, unique={len(test_counts)}, counts={test_counts}"
+    )
+    print("-----#####-----\n")
+
+    return train_counts, test_counts
+
+
+def prepare_dataset(path: Union[Path, str]):
+    df = load_data_to_df(path)
+
+    label_counts = df["label"].value_counts()
+    insufficient = label_counts[label_counts < 2]
+    if not insufficient.empty:
+        df = df[df["label"].isin(label_counts[label_counts >= 2].index)].reset_index(drop=True)
+        print(
+            "Dropped {count} label(s) with <2 samples: {labels}".format(
+                count=len(insufficient), labels=list(insufficient.index)
+            )
+        )
+
+    x_train, x_test, y_train, y_test = stratified_split(df, test_size=0.15)
+
+    vectorizer = CountVectorizer()
+    x_train_transformed, x_test_transformed = vectorize_fit_transform(
+        vectorizer, x_train, x_test
+    )
+
+    encoder = LabelEncoder()
+    y_train_encoded, y_test_encoded = encode_labels(encoder, y_train, y_test)
+
+    summarize_labels(y_train, y_test)
+
+    return {
+        "x_train": x_train_transformed,
+        "x_test": x_test_transformed,
+        "y_train": y_train_encoded,
+        "y_test": y_test_encoded,
+        "encoder": encoder,
+        "vectorizer": vectorizer,
+    }
+
+
+if __name__ == "__main__":
+    prepare_dataset("datasets/dialog_acts_deduplicated.dat")
