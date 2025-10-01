@@ -1,10 +1,11 @@
 inform i do not want a cheap restaurant
 request what is not a cheap restaurant
 reqalts how about non european food
-inform i am not interested in fast food i want something nicer
+inform i am not interested in things like fast food i want something nicer
 request can you tell me which ones are not in the north
 reqalts how about not italian food but mexican instead
 confirm is it not expensive i want a cheap place
-request which restaurants are not available right now
-thankyou no thanks 
-reqalts can we try a place but no not expensive
+request which of the restaurants are not available right now
+reqalts can we try a nicer place but still not expensive
+inform  i don't like the center i would want the restaurant to be in the north
+inform  expensive restaurants are not my thing so i would like something cheap
