@@ -56,11 +56,13 @@ This will start a Terminal UI with three input options:
 - `encode.py`: Encodes labels using `LabelEncoder` (fit on train, transform train/test).
 - `prepare.py`: Orchestrates loading, filtering labels with <2 samples, splitting, vectorizing, encoding, and prints a brief dataset summary.
 
-## Utility Scripts (`utils/`)
-- `convert_data_to_lowercase.py`: Lowercases labels and utterances in a dataset file.
-- `remove_duplicates.py`: Removes duplicate lines (keeps first occurrence).
-- `get_label_dist.py`: Prints label distribution statistics.
-- `check_more_than_one_dialog_act.py`: Checks for lines containing more than one dialog act token.
+## Utility Module (`utils.py`)
+- `convert_data_to_lowercase(input_file, output_file)`: Lowercase a dataset file and save the result.
+- `remove_duplicates(input_file, output_file)`: Remove duplicate lines while preserving order.
+- `plot_dialog_act_counts(dat_path, save_path=None, title=...)`: Plot label frequencies and print stats.
+- `look_for_multiple_dialog_acts(input_file)`: Highlight rows where the same label appears twice.
+
+Run `python utils.py --help` for a small CLI that exposes these helpers.
 
 ## Notes
 - The training pipeline drops labels with fewer than 2 samples to keep stratified splitting valid.
