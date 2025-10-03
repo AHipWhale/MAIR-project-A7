@@ -287,7 +287,7 @@ class dialogAgent():
                 response_utterance = "Hello , welcome to the Cambridge restaurant system? You may requests restaurants by area , price range or food type . How may I assist you?"
             
             self.state_history.append(next_state)
-            return next_state, response_utterance
+            # return next_state, response_utterance
 
         confirm_intents = {"confirm", "affirm"}
         deny_intents = {"deny", "negate"}
@@ -332,13 +332,13 @@ class dialogAgent():
                 next_state, next_message = self.__start_next_confirmation()
                 if next_state:
                     self.state_history.append(next_state)
-                    return next_state, next_message
+                    # return next_state, next_message
 
                 # No more confirmations, continue to fill slots / lookup
                 next_state = "2.2 Fill slots"
                 response_utterance = None
                 self.state_history.append(next_state)
-                return next_state, response_utterance
+                # return next_state, response_utterance
                 
                 
             elif classified_dialog_act in deny_intents:
@@ -353,13 +353,13 @@ class dialogAgent():
                 self.pending_queue = []
 
                 self.state_history.append(next_state)
-                return next_state, response_utterance
+                # return next_state, response_utterance
             else:
                 next_state = "Confirm preference"
                 # Re-ask whichever confirmation message is currently pending.
                 response_utterance = self.pending_message or "Please answer yes or no so I can confirm."
                 self.state_history.append(next_state)
-                return next_state, response_utterance
+                # return next_state, response_utterance
 
         # Extract info based on dialog act (could be call to function)
         # only change value to 'dontcare' for the assiciated current state
@@ -410,12 +410,12 @@ class dialogAgent():
                     next_state, response_utterance = self.__start_next_confirmation()
                     if next_state:
                         self.state_history.append(next_state)
-                        return next_state, response_utterance
+                        # return next_state, response_utterance
 
                 next_state = "Confirm preference"
                 response_utterance = self.pending_message or "Please answer yes or no so I can confirm."
                 self.state_history.append(next_state)
-                return next_state, response_utterance
+                # return next_state, response_utterance
 
             if self.debug_mode:
                 print(f"Area changed to: {self.area}") # debug
