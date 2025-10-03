@@ -22,6 +22,6 @@ def remove_duplicates(input_file, output_file):
     print(f'there are a total of {total_lines_in_source} lines')
     print(f'there are {len(unique_lines)} unique lines')
 
-remove_duplicates(input_file='dialog_acts_lower.dat', output_file='dialog_acts_deduplicated.dat')
+remove_duplicates(input_file='datasets/dialog_acts_lower.dat', output_file='datasets/dialog_acts_deduplicated.dat')
 
 

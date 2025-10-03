@@ -15,4 +15,4 @@ def convert_data_to_lowercase(input_file, output_file):
 
     print(f'result saved to {output_file}')
 
-convert_data_to_lowercase(input_file='dialog_acts.dat', output_file='dialog_acts_lower.dat')
+convert_data_to_lowercase(input_file='datasets/dialog_acts.dat', output_file='datasets/dialog_acts_lower.dat')
