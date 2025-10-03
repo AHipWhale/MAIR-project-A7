@@ -19,12 +19,16 @@ def calc_metrics(model_name: str, y_true: list, y_pred: list):
     # calculate and print accuracy
     print("\nAccuracy:", accuracy_score(y_true, y_pred))
 
+    labels = ['ack', 'affirm', 'bye', 'confirm', 'deny', 'hello', 'inform', 'negate', 'null', 'repeat', 'reqalts', 'reqmore', 'request', 'restart', 'thankyou']
+
     # calculate and print precision, recall and f1-score
-    print("\nClassification Report:\n", classification_report(y_true, y_pred, zero_division=0))
+    print(
+        "\nClassification Report:\n",
+        classification_report(y_true, y_pred, labels=labels, zero_division=0),
+    )
 
     # calculate and print confusion matrix
-    cm = confusion_matrix(y_true, y_pred)
-    labels = ['ack', 'affirm', 'bye', 'confirm', 'deny', 'hello', 'inform', 'negate', 'null', 'repeat', 'reqalts', 'reqmore', 'request', 'restart', 'thankyou']
+    cm = confusion_matrix(y_true, y_pred, labels=labels)
     df_cm = pd.DataFrame(cm, index=labels, columns=labels)
     print("Confusion Matrix (counts)")
     with pd.option_context('display.max_columns', None, 'display.width', 200):
