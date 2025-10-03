@@ -1,18 +1,57 @@
+import csv
 import re
+from pathlib import Path
 from Levenshtein import distance as levenshtein_distance
 
-# all possible options from the database
-pricerange_options = {'cheap', 'moderate', 'expensive', 'dontcare'}
-area_options = {'north', 'south', 'east', 'west', 'centre', 'dontcare'}
-food_options = {
-    "african","asian oriental","australasian","bistro","british","catalan",
-    "chinese","cuban","european","french","fusion","gastropub","indian",
-    "international","italian","jamaican","japanese","korean","lebanese",
-    "mediterranean","modern european","moroccan","north american","persian",
-    "polynesian","portuguese","romanian","seafood","spanish","steakhouse",
-    "swiss","thai","traditional","turkish","tuscan","vietnamese",
-    "dontcare"  
-}
+_DATASET_PATH = Path(__file__).resolve().parent / 'datasets' / 'restaurant_info.csv'
+
+
+# options are loaded from the dataset once when the module is imported
+def _load_options_from_dataset():
+    if not _DATASET_PATH.is_file():
+        raise FileNotFoundError(f"Expected dataset at {_DATASET_PATH} but it was not found")
+
+    pricerange = set()
+    area = set()
+    food = set()
+
+    try:
+        with _DATASET_PATH.open(newline='', encoding='utf-8') as csvfile:
+            reader = csv.DictReader(csvfile)
+            for row in reader:
+                price_value = (row.get('pricerange') or '').strip().lower()
+                if price_value:
+                    pricerange.add(price_value)
+
+                area_value = (row.get('area') or '').strip().lower()
+                if area_value:
+                    area.add(area_value)
+
+                food_value = (row.get('food') or '').strip().lower()
+                if food_value:
+                    food.add(food_value)
+    except (OSError, KeyError) as exc:
+        raise RuntimeError(f"Failed reading restaurant info dataset at {_DATASET_PATH}") from exc
+
+    missing_columns = []
+    if not pricerange:
+        missing_columns.append('pricerange')
+    if not area:
+        missing_columns.append('area')
+    if not food:
+        missing_columns.append('food')
+
+    if missing_columns:
+        missing = ", ".join(missing_columns)
+        raise ValueError(f"Dataset {_DATASET_PATH} is missing values for: {missing}")
+
+    return pricerange, area, food
+
+
+dataset_pricerange, dataset_area, dataset_food = _load_options_from_dataset()
+pricerange_options = dataset_pricerange | {'dontcare'}
+area_options = dataset_area | {'dontcare'}
+food_options = dataset_food | {'dontcare'}
 
 # mapping from keywords to possible options
 pricerange_keyword_map = {
