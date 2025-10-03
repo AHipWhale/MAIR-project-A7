@@ -95,16 +95,25 @@ def prepare_dataset(path: Union[Path, str]):
     df = load_data_to_df(path)
 
     label_counts = df["label"].value_counts()
-    insufficient = label_counts[label_counts < 2]
-    if not insufficient.empty:
-        df = df[df["label"].isin(label_counts[label_counts >= 2].index)].reset_index(drop=True)
+    rare_labels = label_counts[label_counts < 2].index.tolist()
+
+    rare_df = df[df["label"].isin(rare_labels)]
+    major_df = df[~df["label"].isin(rare_labels)]
+
+    if not major_df.empty:
+        x_train_major, x_test, y_train_major, y_test = stratified_split(major_df, test_size=0.15)
+    else:
+        x_train_major, x_test, y_train_major, y_test = [], [], [], []
+
+    x_train = list(x_train_major) + rare_df["text"].tolist()
+    y_train = list(y_train_major) + rare_df["label"].tolist()
+
+    if rare_labels:
         print(
-            "Dropped {count} label(s) with <2 samples: {labels}".format(
-                count=len(insufficient), labels=list(insufficient.index)
+            "Moved {count} sample(s) from rare label(s) {labels} into the train split only.".format(
+                count=len(rare_df), labels=rare_labels
             )
         )
-
-    x_train, x_test, y_train, y_test = stratified_split(df, test_size=0.15)
 
     vectorizer = CountVectorizer()
     x_train_transformed, x_test_transformed = vectorize_fit_transform(

@@ -1,3 +1,10 @@
+import os
+import warnings
+
+# Joblib cannot spawn processes in this environment; force serial execution to avoid warnings.
+os.environ.setdefault("JOBLIB_MULTIPROCESSING", "0")
+warnings.filterwarnings("ignore")
+
 from preprocess_dataset import prepare_dataset
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -49,10 +56,20 @@ def main():
 
     # evaluate on the test data
     pred = classifier.predict(x_test)
+    label_indices = list(range(len(label_encoder.classes_)))
     print("\nAccuracy:", accuracy_score(y_test, pred), '\n')
-    print("Classification Report:\n", classification_report(y_test, pred, target_names=label_encoder.classes_))
+    print(
+        "Classification Report:\n",
+        classification_report(
+            y_test,
+            pred,
+            labels=label_indices,
+            target_names=label_encoder.classes_,
+            zero_division=0,
+        ),
+    )
     # format and print confusion matrix with class labels
-    cm = confusion_matrix(y_test, pred)
+    cm = confusion_matrix(y_test, pred, labels=label_indices)
     labels = list(label_encoder.classes_)
     df_cm = pd.DataFrame(cm, index=labels, columns=labels)
     print("Confusion Matrix (counts)")
