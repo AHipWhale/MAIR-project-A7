@@ -94,19 +94,19 @@ class dialogAgent():
 
     def start_dialog(self):
         """
-        Loop state transition function until the end state "9.1 Goodbye" is reached and ask for user input after each state transition.
+        Loop state transition function until the end state "8.1 Goodbye" is reached and ask for user input after each state transition.
         """
         # Loop state_transition until certain state is reached (end state)
         state = None
         user_input = None
-        while state != "9.1 Goodbye":
+        while state != "8.1 Goodbye":
             # State transition
             state, system_utterance = self.__state_transition(state, user_input)
 
             if self.debug_mode:
                 print("")
 
-            if state != "9.1 Goodbye":
+            if state != "8.1 Goodbye":
                 # Ouput system_utterance
                 if system_utterance:
                     print(f"system: {system_utterance}")
