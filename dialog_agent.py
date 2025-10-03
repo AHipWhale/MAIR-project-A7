@@ -348,7 +348,7 @@ class dialogAgent():
                 print("Entered State '1. Welcome'")
         
         # State "1. Welcome" or "2.2 Ask Area" to "2.2 Ask Area"
-        elif current_state in ["1. Welcome", "2.2 Ask Area"] and self.area == None: # 2.1 Area Known?
+        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.area == None: # 2.1 Area Known?
             # State "2.2 Ask Area"
             next_state = "2.2 Ask Area"
             response_utterance = "What part of town do you have in mind?"
@@ -357,7 +357,7 @@ class dialogAgent():
                 print("Entered State '2.2 Ask Area'")
 
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" to "3.2 Ask price"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price"] and self.price == None: # 3.1 Price known?
+        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.price == None: # 3.1 Price known?
             # State "3.2 Ask price"
             next_state = "3.2 Ask price"
             response_utterance = "How pricy would you like the restaurant to be?"
