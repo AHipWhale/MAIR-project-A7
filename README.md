@@ -67,3 +67,4 @@ Run `python utils.py --help` for a small CLI that exposes these helpers.
 ## Notes
 - The training pipeline drops labels with fewer than 2 samples to keep stratified splitting valid.
 - For multiclass text data, `solver='saga'` is used with LogisticRegression and `class_weight='balanced'` to handle imbalance.
+....
