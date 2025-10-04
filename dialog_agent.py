@@ -630,19 +630,19 @@ class dialogAgent():
         # State "6.1 Suggest restaurant" or "7.1 Provide information questioned" or "8.1 Last restaurant statement" to "7.1 Provide information questioned"
         elif current_state in ["6.1 Suggest restaurant", "7.1 Provide information questioned", "8.1 Last restaurant statement"] and classified_dialog_act == "request":
             # Generate response utterance based on requested info, like phone number, address or postcode
-            if "phone" in utterance:
+            if any(word in utterance for word in ["phone", "phonenumber", "telephone", "number"]):
                 if self.informal_utterances:
                     response_utterance = f"You can call {self.sugg_restaurant['restaurantname']} with {self.sugg_restaurant['phone']}"
                 else:
                     response_utterance = f"The phone number of restaurant {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['phone']}"
             
-            elif "address" in utterance:
+            elif any(word in utterance for word in ["address","adress","street"]):
                 if self.informal_utterances:
                     response_utterance = f"{self.sugg_restaurant['restaurantname']} is on {self.sugg_restaurant['addr']}"
                 else:
                     response_utterance = f"The adres of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['addr']}"
             
-            elif "postcode" in utterance:
+            elif any(word in utterance for word in ["postal", "postcode", "zip", "post", "code"]):
                 if self.informal_utterances:
                     response_utterance = f"You can find {self.sugg_restaurant['restaurantname']} over here {self.sugg_restaurant['postcode']}"
                 else:
