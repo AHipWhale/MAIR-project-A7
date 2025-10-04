@@ -175,6 +175,18 @@ def first_match(patterns, text):
 
     return None # if no match is found, return None
 
+
+def first_match_with_span(patterns, text):
+    '''
+    return the first match and its span found in the text using the list of regex patterns
+    '''
+    for keyword, pattern in patterns:
+        match = pattern.search(text)
+        if match:
+            return keyword, match.span()
+
+    return None, None
+
 def detect_preference_mentions(text: str):
     '''
     check if the user has mentioned a preference slot even if we cannot map it to a known value
@@ -271,10 +283,19 @@ def extract_keywords(text: str):
     area_patterns = make_regex_patterns(area_options | set(area_keyword_map.keys()))
     food_patterns = make_regex_patterns(food_options | set(food_keyword_map.keys()))
 
-    # get first match for each category
-    price_match = first_match(price_patterns, text)
-    area_match = first_match(area_patterns, text)
-    food_match = first_match(food_patterns, text)
+    # get first match (with spans) so we can avoid overlapping slot assignments
+    price_match, _ = first_match_with_span(price_patterns, text)
+    food_match, food_span = first_match_with_span(food_patterns, text)
+
+    area_search_text = text
+    area_fuzzy_text = original_text
+    if food_span:
+        start, end = food_span
+        # Mask cuisine tokens so the area matcher cannot reuse them (e.g., "north american" should stay a food match)
+        area_search_text = text[:start] + (" " * (end - start)) + text[end:]
+        area_fuzzy_text = original_text[:start] + (" " * (end - start)) + original_text[end:]
+
+    area_match, _ = first_match_with_span(area_patterns, area_search_text)
 
     # map the matched keyword to the corresponding option
     output["pricerange"] = map_keyword_to_option(price_match, pricerange_keyword_map, pricerange_options)
@@ -282,9 +303,11 @@ def extract_keywords(text: str):
     output["food"] = map_keyword_to_option(food_match, food_keyword_map, food_options)
 
     mentions = detect_preference_mentions(original_text)
+    if food_span:
+        mentions["area"] = bool(first_match(slot_mention_patterns["area"], clean_text(area_fuzzy_text)))
 
     fuzzy_price = fuzzy_find_keyword(original_text, pricerange_keyword_map, pricerange_options)
-    fuzzy_area = fuzzy_find_keyword(original_text, area_keyword_map, area_options)
+    fuzzy_area = fuzzy_find_keyword(area_fuzzy_text, area_keyword_map, area_options)
     fuzzy_food = fuzzy_find_keyword(original_text, food_keyword_map, food_options)
 
     if output["pricerange"] is None or (output["pricerange"] == "dontcare" and fuzzy_price not in {None, "dontcare"}):
@@ -328,7 +351,9 @@ if __name__ == "__main__":
         "Looking for a moderatley priced place",
         "Anywhere in the noth part of town is fine",
         "Could you find an expensve restaurant",
-        "I want a restaurant that is in the east"
+        "I want a restaurant that is in the east",
+        "I want north american",
+        "I want asian oriental"
     ]
     for test in tests:
         print(f"Input: {test}")
