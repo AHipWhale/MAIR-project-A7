@@ -1,6 +1,6 @@
 {
   "model_type": "decision_tree",
-  "dataset": "datasets/dialog_acts_deduplicated.dat",
+  "dataset": "datasets/dialog_acts_lower.dat",
   "classes": [
     "ack",
     "affirm",
@@ -18,5 +18,5 @@
     "restart",
     "thankyou"
   ],
-  "saved_at": "2025-10-04T15:23:50.755373Z"
+  "saved_at": "2025-10-04T15:23:11.991527Z"
 }
