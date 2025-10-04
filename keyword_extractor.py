@@ -126,6 +126,12 @@ food_indicator_terms = {
     "type of cuisine", "serve", "serves", "serving", "served"
 }
 
+stopwords = {
+    "a", "an", "and", "are", "as", "at", "be", "but", "for", "from",
+    "in", "into", "is", "it", "of", "on", "or", "that", "the", "to",
+    "was", "were", "will", "with"
+}
+
 def clean_text(text: str):
     '''
     convert to lowercase and remove special characters and extra spaces
@@ -201,7 +207,8 @@ def fuzzy_find_keyword(text: str, keyword_map, options, max_distance: int = 3):
     if levenshtein_distance is None:  # bail out when the optional dependency is missing
         return None
 
-    tokens = clean_text(text).split()  # normalise the user text into tokens
+    # Removing stopwords prevents fuzzy matches such as "that"->"thai" (levenshtein distance 1) from hijacking the cuisine slot.
+    tokens = [t for t in clean_text(text).split() if t not in stopwords]
     if not tokens:  # no tokens means nothing to match against
         return None
 
