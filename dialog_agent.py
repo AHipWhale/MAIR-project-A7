@@ -27,17 +27,26 @@ class dialogAgent():
         config_path = Path("config.json")
         confirm_key = "Ask confirmation for each preference or not"
         restart_key = "Allow dialog restarts or not"
+        informal_key = "Informal language instead of formal"
+        random_key = "Preferences are asked in random order"
         confirm_flag = False
         restart_flag = False
+        informal_flag = False
+        random_flag = False
+
         if config_path.exists():
             try:
                 with config_path.open("r", encoding="utf-8") as config_file:
                     config_data = json.load(config_file)
                     confirm_flag = config_data.get(confirm_key, False)
                     restart_flag = config_data.get(restart_key, False)
+                    informal_flag = config_data.get(informal_key, False)
+                    random_flag = config_data.get(random_key, False)
             except (json.JSONDecodeError, OSError):
                 confirm_flag = False
                 restart_flag = False
+                informal_flag = False
+                random_flag = False
 
         # Initialize important variables
         self.area = None
@@ -59,6 +68,9 @@ class dialogAgent():
         # Confirmation toggle and temporary storage for pending slot confirmations.
         self.confirm_preferences = confirm_flag
         self.allow_restart = restart_flag
+        self.informal_utterances = informal_flag
+        self.random_order = random_flag
+        
         # The following fields track whichever slot/value is being confirmed:
         # - pending_slot/pending_value store the slot name and proposed value currently awaiting yes/no.
         # - pending_state/pending_prompt let us fall back to the original question if the user says "no".
