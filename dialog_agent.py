@@ -539,17 +539,26 @@ class dialogAgent():
 
         # State "6.1 Suggest restaurant" to "6.1 Suggest restaurant"
         elif current_state == "6.1 Suggest restaurant" and classified_dialog_act == "reqalts":
-            self.sugg_restaurant = random.choice(self.restaurants)
-            self.restaurants.remove(self.sugg_restaurant)
+            # Check if there are other resaurants to suggest
+            if len(self.restaurants) >= 1:
+                self.sugg_restaurant = random.choice(self.restaurants)
+                self.restaurants.remove(self.sugg_restaurant)
 
-            next_state = "6.1 Suggest restaurant"
+                next_state = "6.1 Suggest restaurant"
 
-            # explain reasoning if additional preferences were given
-            if "reasoning_explained" in self.sugg_restaurant:
-                response_utterance = f"{self.sugg_restaurant['restaurantname']} is another restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant or a different restaurant?" 
+                # response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants == 0) else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant or a different restaurant?" 
+                    
+
+                # explain reasoning if additional preferences were given
+                if "reasoning_explained" in self.sugg_restaurant:
+                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant or a different restaurant?" 
+                else:
+                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. Would you like some infromation about this restaurant or a different restaurant?" 
+            
             else:
-                response_utterance = f"{self.sugg_restaurant['restaurantname']} is another restaurant that meet your requirements. Would you like some infromation about this restaurant or a different restaurant?" 
-
+                next_state = "6.1 Suggest restaurant"
+                response_utterance = "There are no other restaurant left that meet your requirements. Would you like some infromation about the last suggested restaurant?"
+                
             if self.debug_mode:
                 print("Entered State '6.1 Suggest restaurant'")
 
