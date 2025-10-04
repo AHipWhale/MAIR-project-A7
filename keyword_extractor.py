@@ -286,10 +286,11 @@ def extract_keywords(text: str):
     # get first match (with spans) so we can avoid overlapping slot assignments
     price_match, _ = first_match_with_span(price_patterns, text)
     food_match, food_span = first_match_with_span(food_patterns, text)
+    food_value = map_keyword_to_option(food_match, food_keyword_map, food_options)
 
     area_search_text = text
     area_fuzzy_text = original_text
-    if food_span:
+    if food_span and food_value not in {None, 'dontcare'}:
         start, end = food_span
         # Mask cuisine tokens so the area matcher cannot reuse them (e.g., "north american" should stay a food match)
         area_search_text = text[:start] + (" " * (end - start)) + text[end:]
@@ -300,7 +301,7 @@ def extract_keywords(text: str):
     # map the matched keyword to the corresponding option
     output["pricerange"] = map_keyword_to_option(price_match, pricerange_keyword_map, pricerange_options)
     output["area"] = map_keyword_to_option(area_match, area_keyword_map, area_options)
-    output["food"] = map_keyword_to_option(food_match, food_keyword_map, food_options)
+    output["food"] = food_value
 
     mentions = detect_preference_mentions(original_text)
     if food_span:
@@ -353,7 +354,8 @@ if __name__ == "__main__":
         "Could you find an expensve restaurant",
         "I want a restaurant that is in the east",
         "I want north american",
-        "I want asian oriental"
+        "I want asian oriental",
+        "any"
     ]
     for test in tests:
         print(f"Input: {test}")
