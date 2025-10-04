@@ -72,6 +72,12 @@ class dialogAgent():
         self.pending_queue = []
         self.pending_queue = []
 
+        # Initialize additional preferences
+        self.romantic = None
+        self.children = None
+        self.assigned_seats = None
+        self.touristic = None
+
     def start_dialog(self):
         """
         Loop state transition function until the end state "9.1 Goodbye" is reached and ask for user input after each state transition.
@@ -117,10 +123,101 @@ class dialogAgent():
         matches_dict = matches.to_dict(orient="records") 
 
         if self.debug_mode:
-            print(f"Matches: {matches_dict}") # debug
+            print(f"Restaurants matches: {matches_dict}") # debug
 
         return matches_dict
         
+    def __reasoning_rules_filter(self, possible_restaurants: list) -> list:
+        """
+        Applies reasoning rules on and filters restaurants in 'possible_restaurants' based on given additional preferences.
+        Additional preferences are stored in: self.touristic, self.assigned_seats, self.children and self.romantic.
+        Returns list of restaurants that meet the additional preferences.
+        """
+        restaurants_to_remove = []
+
+        for restaurant in possible_restaurants:
+            remove_restaurant = False
+
+            if self.touristic:
+                # cheap and good food = True
+                # romanian = False
+
+                if restaurant["food"] == "romanian":
+                    romanian = True
+                else:
+                    romanian = False
+
+                if restaurant["pricerange"] == "cheap" and restaurant["food_quality"] == "good":
+                    cheap_good = True
+                else:
+                    cheap_good = False
+                
+                if romanian: # romanian priority over cheap and good
+                    remove_restaurant = True
+                elif cheap_good == False:
+                    remove_restaurant = True
+                else:
+                    # explain why this restaurant fits the additional requirements
+                    restaurant["reasoning_explained"] = f"This restaurant is great for tourists, because the food quality is {restaurant["food_quality"]} and the food is {restaurant["pricerange"]}."
+            
+            if self.assigned_seats:
+                # busy = True
+                if restaurant["crowdedness"] != "busy":
+                    remove_restaurant = True
+                else:
+                    # explain why this restaurant fits the additional requirements
+                    if "reasoning_explained" in restaurant: #self.touristic:
+                        restaurant["reasoning_explained"] += f" This restaurant is also assignes your seats because the crowdedness is {restaurant["crowdedness"]}."
+                    else:
+                        restaurant["reasoning_explained"] = f"This restaurant assignes your seats because the crowdedness is {restaurant["crowdedness"]}."
+            
+            if self.children:
+                # long stay = False
+                if restaurant["length_of_stay"] == "long":
+                    remove_restaurant = True
+                else:
+                    # explain why this restaurant fits the additional requirements
+                    if "reasoning_explained" in restaurant: #self.touristic or self.assigned_seats:
+                        restaurant["reasoning_explained"] += f" Also this restaurant is good for taking children to, because your expected to stay for a {restaurant["length_of_stay"]} time."
+                    else:
+                        restaurant["reasoning_explained"] = f"This restaurant is good for taking children to, because your expected to stay for a {restaurant["length_of_stay"]} time."
+                
+            if self.romantic:
+                # busy = False
+                # long stay = True
+                if restaurant["crowdedness"] == "busy":
+                    busy = True
+                else:
+                    busy = False
+                
+                if restaurant["length_of_stay"] == "long":
+                    long_stay = True
+                else:
+                    long_stay = False
+                
+                if long_stay == False: # long stay priority over busy
+                    remove_restaurant = True
+                elif busy:
+                    remove_restaurant = True
+                else:
+                    # explain why this restaurant fits the additional requirements
+                    if "reasoning_explained" in restaurant: #self.touristic or self.assigned_seats or self.children:
+                        restaurant["reasoning_explained"] += f" This restaurant is also romantic, because crowdedness is {restaurant["crowdedness"]} and you are expected to stay for a {restaurant["length_of_stay"]} time."
+                    else:
+                        restaurant["reasoning_explained"] = f"This restaurant is romantic, because crowdedness is {restaurant["crowdedness"]} and you are expected to stay for a {restaurant["length_of_stay"]} time."
+            
+            if remove_restaurant:
+                # possible_restaurants.remove(restaurant)
+                restaurants_to_remove.append(restaurant)
+        
+        for remove_res in restaurants_to_remove:
+            possible_restaurants.remove(remove_res)
+        
+        if self.debug_mode:
+            print(f"\nReasoning rules matches: {possible_restaurants}") # debug
+
+        return possible_restaurants
+
 
     def __confirm_each_preference(self, slot: str, value: str, ask_state: str, prompt: str) -> tuple:
         """
@@ -374,12 +471,35 @@ class dialogAgent():
             if self.debug_mode:
                 print("Entered State '4.2 Ask Food type'")
         
+        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
+            # State "..." (additional preferences)
+            next_state = "4.1 Ask for additional preferences" #(additional preferences)
+            response_utterance = "Do you have any additional preferences?"
+
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" or "5.2 Change 1 of preferences" to "5.2 Change 1 of preferences" or "6.1 Suggest restaurant"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type", "5.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 5.1 Is there a match
+        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type", "4.1 Ask for additional preferences", "5.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 5.1 Is there a match
+            
+            if current_state == "4.1 Ask for additional preferences":
+                # extract preferences from utterance
+                if "romantic" in utterance:
+                    self.romantic = True
+                
+                if "children" in utterance:
+                    self.children = True
+                
+                if "assigned" in utterance and "seats" in utterance:
+                    self.assigned_seats = True
+                
+                if "touristic" in utterance:
+                    self.touristic = True
+            
             # Look up possible restaurants that meet requirements
             possible_restaurants = self.__look_up_restaurants(self.area, self.price, self.food)
-                
-            possible_restaurant_count = len(possible_restaurants)
+            
+            # Filter possible_restaurants based on additional preferences
+            filtered_possible_restaurants = self.__reasoning_rules_filter(possible_restaurants)
+
+            possible_restaurant_count = len(filtered_possible_restaurants)
 
             if possible_restaurant_count == 0: # If there are no restaurants that meet requirements
                 # State "5.2 Change 1 of preferences"
@@ -391,16 +511,26 @@ class dialogAgent():
 
             else:
                 if possible_restaurant_count == 1: # If there is one restaurant that meet requirements
-                    self.sugg_restaurant = possible_restaurants[0]
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. Would you like some infromation about this restaurant?"
+                    self.sugg_restaurant = filtered_possible_restaurants[0]
+
+                    # explain reasoning if additional preferences were given
+                    if "reasoning_explained" in self.sugg_restaurant:
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant?"
+                    else:
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. Would you like some infromation about this restaurant?"
+
                 else: # If there are multiple restaurants that meet requirements
                     # Choose random restaurant and save the others
-                    self.sugg_restaurant = random.choice(possible_restaurants)
-                    self.restaurants = possible_restaurants
+                    self.sugg_restaurant = random.choice(filtered_possible_restaurants)
+                    self.restaurants = filtered_possible_restaurants
                     self.restaurants.remove(self.sugg_restaurant)
 
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. Would you like some infromation about this restaurant or an alternative restaurant?"
-
+                    # explain reasoning if additional preferences were given
+                    if "reasoning_explained" in self.sugg_restaurant:
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant or an alternative restaurant?"
+                    else:
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. Would you like some infromation about this restaurant or an alternative restaurant?"
+                    
                 # State "6.1 Suggest restaurant"
                 next_state = "6.1 Suggest restaurant"
 
@@ -409,12 +539,26 @@ class dialogAgent():
 
         # State "6.1 Suggest restaurant" to "6.1 Suggest restaurant"
         elif current_state == "6.1 Suggest restaurant" and classified_dialog_act == "reqalts":
-            self.sugg_restaurant = random.choice(self.restaurants)
-            self.restaurants.remove(self.sugg_restaurant)
+            # Check if there are other resaurants to suggest
+            if len(self.restaurants) >= 1:
+                self.sugg_restaurant = random.choice(self.restaurants)
+                self.restaurants.remove(self.sugg_restaurant)
 
-            next_state = "6.1 Suggest restaurant"
-            response_utterance = f"{self.sugg_restaurant['restaurantname']} is another restaurant that meet your requirements. Would you like some infromation about this restaurant or a different restaurant?" 
+                next_state = "6.1 Suggest restaurant"
 
+                # response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants == 0) else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant or a different restaurant?" 
+                    
+
+                # explain reasoning if additional preferences were given
+                if "reasoning_explained" in self.sugg_restaurant:
+                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"]} Would you like some infromation about this restaurant or a different restaurant?" 
+                else:
+                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. Would you like some infromation about this restaurant or a different restaurant?" 
+            
+            else:
+                next_state = "6.1 Suggest restaurant"
+                response_utterance = "There are no other restaurant left that meet your requirements. Would you like some infromation about the last suggested restaurant?"
+                
             if self.debug_mode:
                 print("Entered State '6.1 Suggest restaurant'")
 
@@ -456,6 +600,9 @@ class dialogAgent():
         else:
             next_state = current_state
             response_utterance = "I didn't understand, could you rephrase it in a different way?"
+
+            if self.debug_mode:
+                print(f"Entered no state with next_state: '{next_state}' and response_utterance: '{response_utterance}'")
 
 
         # To exit programme (DEBUG)
