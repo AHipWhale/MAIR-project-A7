@@ -70,7 +70,7 @@ class dialogAgent():
         self.allow_restart = restart_flag
         self.informal_utterances = informal_flag
         self.random_order = random_flag
-        
+
         # The following fields track whichever slot/value is being confirmed:
         # - pending_slot/pending_value store the slot name and proposed value currently awaiting yes/no.
         # - pending_state/pending_prompt let us fall back to the original question if the user says "no".
@@ -89,6 +89,9 @@ class dialogAgent():
         self.children = None
         self.assigned_seats = None
         self.touristic = None
+
+        # Prefferences order
+        self.prefference_order = ["2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] 
 
     def start_dialog(self):
         """
@@ -390,6 +393,9 @@ class dialogAgent():
             output = extract_keywords(utterance)
             captured_entries = []
 
+            if self.debug_mode:
+                print("extract keywords output", output)
+
             if output['area'] != None:
                 if (output['area'] == 'dontcare' and current_state == "2.2 Ask Area") or output['area'] != 'dontcare':
                     if self.confirm_preferences:
@@ -444,7 +450,22 @@ class dialogAgent():
                 print(f"Area changed to: {self.area}") # debug
                 print(f"Price changed to: {self.price}") # debug
                 print(f"Food changed to: {self.food}") # debug
-        
+
+        # Remove preferences if they are already known
+        if self.area != None and "2.2 Ask Area" in self.prefference_order:
+            self.prefference_order.remove("2.2 Ask Area")
+        if self.price != None and "3.2 Ask price" in self.prefference_order:
+            self.prefference_order.remove("3.2 Ask price")
+        if self.food != None and "4.2 Ask Food type" in self.prefference_order:
+            self.prefference_order.remove("4.2 Ask Food type")
+
+        # Assign current state based on prefference order
+        if current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and len(self.prefference_order) != 0:
+            current_state = self.prefference_order[0]
+            
+            if self.debug_mode:
+                print(f"Current values: area={self.area}, price={self.price}, food={self.food}")
+
         # State transitions
 
         # State 0 to "1. Welcome"
@@ -453,11 +474,15 @@ class dialogAgent():
             next_state = "1. Welcome"
             response_utterance = WELCOME_MESSAGE
 
+            # randomize order
+            if self.random_order:
+                random.shuffle(self.prefference_order)
+
             if self.debug_mode:
                 print("Entered State '1. Welcome'")
-        
+
         # State "1. Welcome" or "2.2 Ask Area" to "2.2 Ask Area"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.area == None: # 2.1 Area Known?
+        elif current_state  == "2.2 Ask Area" and self.area == None: # 2.1 Area Known?
             # State "2.2 Ask Area"
             next_state = "2.2 Ask Area"
             response_utterance = "What part of town do you have in mind?"
@@ -466,7 +491,7 @@ class dialogAgent():
                 print("Entered State '2.2 Ask Area'")
 
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" to "3.2 Ask price"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.price == None: # 3.1 Price known?
+        elif current_state == "3.2 Ask price" and self.price == None: # 3.1 Price known?
             # State "3.2 Ask price"
             next_state = "3.2 Ask price"
             response_utterance = "How pricy would you like the restaurant to be?"
@@ -475,7 +500,7 @@ class dialogAgent():
                 print("Entered State '3.2 Ask price'")
         
         # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4,2 Ask Food type" to "4.2 Ask Food type"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.food == None: # 4.1 Food type known?
+        elif current_state == "4.2 Ask Food type" and self.food == None: # 4.1 Food type known?
             # State "4.2 Ask Food type"
             next_state = "4.2 Ask Food type"
             response_utterance = "What kind of food would you like?"
