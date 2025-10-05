@@ -640,7 +640,7 @@ class dialogAgent():
                 if self.informal_utterances:
                     response_utterance = f"{self.sugg_restaurant['restaurantname']} is on {self.sugg_restaurant['addr']}"
                 else:
-                    response_utterance = f"The adres of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['addr']}"
+                    response_utterance = f"The address of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['addr']}"
             
             elif any(word in utterance for word in ["postal", "postcode", "zip", "post", "code"]):
                 if self.informal_utterances:
