@@ -49,7 +49,11 @@ def main():
     if args.model == "logistic_regression":
         classifier = LogisticRegression(max_iter=1000, solver='saga', class_weight='balanced', C=1.0)
     else:  # decision_tree
-        classifier = DecisionTreeClassifier(criterion='gini', class_weight='balanced', random_state=0)
+        classifier = DecisionTreeClassifier(
+            criterion='gini',
+            random_state=0,
+            ccp_alpha=0.0002,
+        )
 
     # fit the model to the training data
     classifier.fit(x_train, y_train)
