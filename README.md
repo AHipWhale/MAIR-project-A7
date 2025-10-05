@@ -59,7 +59,7 @@ Use `--model-dir` to point at a directory containing saved artifacts and provide
 python infer.py --model-dir saved_models/logistic_regression --input "book a table for two in rome"
 
 # Batch inference with probabilities using the deduplicated decision tree. Use the --file argument to run inference on a file containing multiple utterances
-python infer.py --model-dir saved_models/logistic_regression --file datasets/samples.txt
+python infer.py --model-dir saved_models/decision_tree --file datasets/samples.txt
 ```
 
 The script echoes each utterance with its predicted dialog act. When `--proba` is set and the model supports probabilities, the top-k class confidences are printed.
