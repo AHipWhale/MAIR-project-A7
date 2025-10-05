@@ -673,7 +673,7 @@ class dialogAgent():
                 print("Entered State '8.1 Last restaurant statement'")
         
         # State "8.1 Last restaurant statement" or "7.1 Provide information questioned" to "9.1 Goodbye"
-        elif current_state in ["7.1 Provide information questioned", "8.1 Last restaurant statement"] and classified_dialog_act == "bye":
+        elif current_state in ["7.1 Provide information questioned", "8.1 Last restaurant statement"] and classified_dialog_act in ["bye", 'thankyou']:
             # "9.1 Goodbye"
             next_state = "9.1 Goodbye"
             response_utterance = None
