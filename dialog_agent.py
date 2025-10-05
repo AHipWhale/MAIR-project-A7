@@ -592,7 +592,7 @@ class dialogAgent():
 
                     # explain reasoning if additional preferences were given
                     if self.informal_utterances:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is just what you. where looking for. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode?"
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is just what you are looking for. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode or an alternative restaurant?"
                     else:
                         response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or an alternative restaurant?"
                     
@@ -613,7 +613,7 @@ class dialogAgent():
 
                 # explain reasoning if additional preferences were given
                 if self.informal_utterances:
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} match. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode?"
+                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} match. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode or a different restaurant?"
                 else:
                     response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or a different restaurant?" 
             
