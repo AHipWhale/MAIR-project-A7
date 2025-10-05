@@ -707,5 +707,5 @@ if __name__ == "__main__":
     # expand csv to include 3 new columns: food_quality, crowdedness, length_of_stay
     expand_csv(Path("datasets/restaurant_info.csv"), Path("datasets/expanded_restaurant_info.csv"))
 
-    agent = dialogAgent(model_path='saved_models/logistic_regression', debug_mode=True)
+    agent = dialogAgent(model_path='saved_models/decision_tree', debug_mode=True)
     agent.start_dialog()
