@@ -3,7 +3,7 @@
 Project for dialog act classification.
 
 # Getting Started
-Before running any code, please install the right packages by running `pip install -r requirements.txt`.  
+Before running any code, please install the right packages by running `pip install -r requirements.txt`. Please use Python version 3.12.1
 To run train, inference and evaluation, please check the instructions in the respective sections.
 
 # Dialog Management System
