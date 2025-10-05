@@ -582,7 +582,7 @@ class dialogAgent():
                     if self.informal_utterances:
                         response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only match. What info would you like on this restaurant - phone, address or postcode?"
                     else:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} Would you like some infromation about this restaurant?"
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode?"
                     
                 else: # If there are multiple restaurants that meet requirements
                     # Choose random restaurant and save the others
@@ -594,7 +594,7 @@ class dialogAgent():
                     if self.informal_utterances:
                         response_utterance = f"{self.sugg_restaurant['restaurantname']} is just what you. where looking for. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode?"
                     else:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} Would you like some infromation about this restaurant or an alternative restaurant?"
+                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or an alternative restaurant?"
                     
                 # State "6.1 Suggest restaurant"
                 next_state = "6.1 Suggest restaurant"
@@ -615,7 +615,7 @@ class dialogAgent():
                 if self.informal_utterances:
                     response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} match. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode?"
                 else:
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} Would you like some infromation about this restaurant or a different restaurant?" 
+                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or a different restaurant?" 
             
             else:
                 next_state = "6.1 Suggest restaurant"
