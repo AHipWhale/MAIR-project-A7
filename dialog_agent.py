@@ -420,7 +420,7 @@ class dialogAgent():
                             "slot": "price",
                             "value": output['pricerange'],
                             "ask_state": "3.2 Ask price",
-                            "prompt": "How pricy would you like the restaurant to be?",
+                            "prompt": "How pricey would you like the restaurant to be?",
                         })
                     else:
                         self.price = output['pricerange']
@@ -508,9 +508,9 @@ class dialogAgent():
             next_state = "3.2 Ask price"
 
             if self.informal_utterances:
-                response_utterance = "How pricy do you want your meal to be?"
+                response_utterance = "How pricey do you want your meal to be?"
             else:
-                response_utterance = "How pricy would you like the restaurant to be?"
+                response_utterance = "How pricey would you like the restaurant to be?"
 
             if self.debug_mode:
                 print("Entered State '3.2 Ask price'")
