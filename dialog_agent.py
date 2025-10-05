@@ -533,7 +533,7 @@ class dialogAgent():
             next_state = "4.1 Ask for additional preferences"
             
             if self.informal_utterances:
-                response_utterance = "Do you have any additional preferences?" # NEEDS TO BE INFORMAL!!!
+                response_utterance = "Any more preferences?"
             else:
                 response_utterance = "Do you have any additional preferences?"
 
@@ -620,7 +620,7 @@ class dialogAgent():
             else:
                 next_state = "6.1 Suggest restaurant"
                 if self.informal_utterances:
-                    response_utterance = "" # NEED INFORMAL UTTERANCE!!!!!
+                    response_utterance = "Sorry man no restaurants are left with your requirements, do you want to know something about the last restaurant I suggested." 
                 else:
                     response_utterance = "There are no other restaurant left that meet your requirements. Would you like some infromation about the last suggested restaurant?"
                 
