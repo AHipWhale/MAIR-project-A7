@@ -1,9 +1,10 @@
-# uu_p1_methods_in_ai
+# Methods in AI Research - Lab 1
 
-Project for dialog act classification with simple data prep utilities and a training CLI.
+Project for dialog act classification.
 
 # Getting Started
-Before running any code, please install the right packages by running `pip install -r requirements.txt`.
+Before running any code, please install the right packages by running `pip install -r requirements.txt`.  
+To run train, inference and evaluation, please check the instructions in the respective sections.
 
 # Dialog Management System
 The Dialog Management System is located in `dialog_agent.py`. To run the dialog management system, run that file. By default it uses a decision tree model saved in `artifacts/dt` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
@@ -27,44 +28,83 @@ This will start a Terminal UI with three input options:
 
 # Machine Learning models
 
-## Quick Start
-- Default (logistic regression): `python train.py`
-- Select model: `python train.py --model decision_tree`
-- Select dataset: `python train.py --data datasets/dialog_acts_lower.dat`
+## Prerequisites
+- Run all commands from the project root.
+- Install dependencies once with `pip install -r requirements.txt`.
 
-### Save and Infer
-- Save artifacts while training: `python train.py --save-dir artifacts/logreg`
-- Run inference on a single utterance: `python infer.py --model-dir artifacts/logreg --input "book a flight to rome"`
-- Run inference on a file (one utterance per line): `python infer.py --model-dir artifacts/logreg --file my_utterances.txt`
-- Show top-k probabilities: `python infer.py --model-dir artifacts/logreg --file my_utterances.txt --proba --topk 5`
+## Training (`train.py`)
+- Default run (logistic regression on the deduplicated dataset): `python train.py`
+- Switch model: `python train.py --model decision_tree`
+- Use a different dataset: `python train.py --data datasets/<your_file.dat>`
+- Persist artifacts for later inference/evaluation: `python train.py --save-dir saved_models/<folder_name>`
 
-## Top-Level Files
-- `train.py`: CLI to train a classifier on the dataset. Supports `--model {logistic_regression,decision_tree}` and `--data <path>`. Prints accuracy, classification report, and confusion matrix.
-- `infer.py`: CLI to load saved artifacts (`model.joblib`, `vectorizer.joblib`, `label_encoder.joblib`) and predict labels for inputs.
-- `datasets/`: Folder containing dataset files:
-  - `dialog_acts.dat`: Original dataset (label + utterance per line).
-  - `dialog_acts_lower.dat`: Lowercased version of the dataset.
-  - `dialog_acts_deduplicated.dat`: Deduplicated dataset (removed duplicate utterances).
-  - `difficult_cases_multiple.dat`: Dataset with difficult cases where multiple dialog acts are present in one utterance.
-  - `difficult_cases_negation.dat`: Dataset with difficult cases that contain negation but are different dialog acts.
+Example – retrain the bundled decision-tree model on the deduplicated data:
 
-## Data Prep Module (`preprocess_dataset/`)
-- `__init__.py`: Re-exports helpers for convenient import.
-- `dataio.py`: Loads a space-separated `label utterance` file into a pandas DataFrame with columns `label` and `text`.
-- `split.py`: Creates a stratified train/test split (default 85/15) using scikit-learn.
-- `vectorize.py`: Fits a `CountVectorizer` on train text and transforms train/test.
-- `encode.py`: Encodes labels using `LabelEncoder` (fit on train, transform train/test).
-- `prepare.py`: Orchestrates loading, filtering labels with <2 samples, splitting, vectorizing, encoding, and prints a brief dataset summary.
+```bash
+python train.py --model decision_tree --data datasets/dialog_acts_deduplicated.dat --save-dir saved_models_new/decision_tree
+```
 
-## Utility Module (`utils.py`)
-- `convert_data_to_lowercase(input_file, output_file)`: Lowercase a dataset file and save the result.
-- `remove_duplicates(input_file, output_file)`: Remove duplicate lines while preserving order.
-- `plot_dialog_act_counts(dat_path, save_path=None, title=...)`: Plot label frequencies and print stats.
-- `look_for_multiple_dialog_acts(input_file)`: Highlight rows where the same label appears twice.
+Training prints accuracy, a classification report, and a confusion matrix. When `--save-dir` is provided, it creates `model.joblib`, `vectorizer.joblib`, `label_encoder.joblib`, and `metadata.json` inside the target folder.
 
-Run `python utils.py --help` for a small CLI that exposes these helpers.
+## Saved Artifacts
+- The repository already ships with models trained on the deduplicated dataset in `saved_models/logistic_regression` and `saved_models/decision_tree`.
+- Directories without the `_original` suffix use the deduplicated data; the `_original` variants were trained on the raw dataset.
+- Each directory contains the three `.joblib` files required by `infer.py` plus `metadata.json`.
+
+## Inference (`infer.py`)
+Use `--model-dir` to point at a directory containing saved artifacts and provide input via `--input` (single utterance) or `--file` (one utterance per line).
+
+```bash
+# Classify a single utterance with the deduplicated logistic regression model
+python infer.py --model-dir saved_models/logistic_regression --input "book a table for two in rome"
+
+# Batch inference with probabilities using the deduplicated decision tree. Use the --file argument to run inference on a file containing multiple utterances
+python infer.py --model-dir saved_models/decision_tree --file samples.txt --proba --topk 5
+```
+
+The script echoes each utterance with its predicted dialog act. When `--proba` is set and the model supports probabilities, the top-k class confidences are printed.
+
+## Evaluation (`evaluate.py`)
+`evaluate.py` rebuilds the same stratified test split used during training (default dataset: `datasets/dialog_acts_deduplicated.dat`). Point it at the saved models or baselines you want to score.
+
+```bash
+# Evaluate the deduplicated logistic regression model
+python evaluate.py --model logistic_regression
+
+# Evaluate the deduplicated decision tree model
+python evaluate.py --model decision_tree
+
+# Evaluate both deduplicated saved models at once
+python evaluate.py --model saved
+
+# Evaluate a custom artifact directory
+python evaluate.py --model saved_models/decision_tree --data datasets/dialog_acts_deduplicated.dat
+
+# Evaluation for the basline models:  
+
+# Score the keyword and "always inform" baselines
+python evaluate.py --model baseline
+
+# Evaluate a single baseline by key
+python evaluate.py --model baseline_rulebased
+
+```
+
+Each run prints accuracy, a full classification report, and a confusion matrix for the selected models.
+
+## Reference: Datasets and Helpers
+- `train.py`: Training CLI supporting `--model {logistic_regression,decision_tree}` and `--data <path>`.
+- `infer.py`: Loads saved artifacts to predict labels for inputs from `--input` or `--file`.
+- `evaluate.py`: Scores saved or baseline models; accepts `--model`, `--data`, and `--artifacts-root`.
+- `datasets/`: contains
+  - `dialog_acts.dat`: original dataset (label + utterance per line)
+  - `dialog_acts_lower.dat`: lowercased version of the dataset
+  - `dialog_acts_deduplicated.dat`: deduplicated dataset used by default in scripts
+  - `difficult_cases_multiple.dat`: multiple dialog acts in a single utterance
+  - `difficult_cases_negation.dat`: negation-heavy utterances
+- `preprocess_dataset/`: helpers for loading, stratified splitting, vectorising, and label encoding
+- `utils.py`: CLI utilities for lowercasing, deduplicating, plotting label counts, and auditing duplicates; run `python utils.py --help` to explore the commands
 
 ## Notes
-- The training pipeline drops labels with fewer than 2 samples to keep stratified splitting valid.
-- For multiclass text data, `solver='saga'` is used with LogisticRegression and `class_weight='balanced'` to handle imbalance.
-....
+- The training pipeline drops labels with fewer than two samples so stratified splitting remains valid.
+- Logistic regression uses `solver='saga'` with `class_weight='balanced'` to handle label imbalance.
