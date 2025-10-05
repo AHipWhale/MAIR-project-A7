@@ -567,7 +567,7 @@ class dialogAgent():
                 next_state = "5.2 Change 1 of preferences"
                 
                 if self.informal_utterances:
-                    response_utterance = "Sorry man, no restaurants meet your preference, do you wanna change the area, price range or food type?"
+                    response_utterance = "Sorry man, no restaurants meet your preference. Please try a different area, price range or food type."
                 else:
                     response_utterance = "There are no restaurants that meet your requirements. Would you like to change the area, pricerange or foodtype? And what would you like to change it to?"
 
