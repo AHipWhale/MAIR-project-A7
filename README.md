@@ -9,7 +9,7 @@ Before running any code, please install the right packages by running `pip insta
 # Dialog Management System
 The Dialog Management System is located in `dialog_agent.py`.  
 To run the dialog management system, run that file or use `python dialog_agent.py`.  
-An example working conversation can be found in the [Example conversation](#example-conversation) section below.
+An example working conversation can be found in the [Example conversations](#example-conversations) section below.
 By default it uses a decision tree model saved in `saved_models/decision_tree` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. The model the dialog manager can be changed to any of the folder names present in the `saved_models` folder. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
 <br><br>
 If you want to see what information the system saves and what states it transitions into, set `debug_mode=True`, default: `debug_mode=False` when making a new instance of the dialogAgent class. Example: `agent = dialogAgent(model_path='saved_models/decision_tree', debug_mode=True)`. This can be changed at the bottom of the `dialog_agent.py` file. 
