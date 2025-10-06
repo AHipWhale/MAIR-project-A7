@@ -8,6 +8,13 @@ _DATASET_PATH = Path(__file__).resolve().parent / 'datasets' / 'restaurant_info.
 
 # options are loaded from the dataset once when the module is imported
 def _load_options_from_dataset():
+    """Read cuisine metadata CSV and collect valid slot values.
+
+    Inputs:
+        None; relies on the module-level `_DATASET_PATH` pointing to the CSV file.
+    Returns:
+        Tuple of three sets containing known values for pricerange, area, and food slots.
+    """
     if not _DATASET_PATH.is_file():
         raise FileNotFoundError(f"Expected dataset at {_DATASET_PATH} but it was not found")
 
@@ -133,9 +140,13 @@ stopwords = {
 }
 
 def clean_text(text: str):
-    '''
-    convert to lowercase and remove special characters and extra spaces
-    '''
+    """Standardize user text by lowercasing and stripping punctuation.
+
+    Inputs:
+        text: Raw utterance string to sanitize prior to keyword matching.
+    Returns:
+        Normalized string where special characters are removed and whitespace is collapsed.
+    """
     s = text.lower() # converts the string to lowercase
     s = re.sub(r"[^\w\s'&/-]+", " ", s) # replaces all characters that are not alphanumeric, _, ', &, /, - with a space
     s = re.sub(r"\s+", " ", s).strip() # removes one or more spaces with a single space
@@ -143,11 +154,13 @@ def clean_text(text: str):
     return s
 
 def make_regex_patterns(keywords):
-    '''
-    instead of using for loops to cycle over each word in the keyword dictionary and trying to
-    match it with each word in the input, we can use regex patterns to find a match.
-    this also prevents issues like finding a match on 'high' instead of 'high end'
-    '''
+    """Build compiled regex patterns for each keyword synonym.
+
+    Inputs:
+        keywords: Iterable of string synonyms to match in user text.
+    Returns:
+        List of tuples `(keyword, compiled_regex)` sorted from longest to shortest keyword.
+    """
     cleaned = sorted({clean_text(k) for k in keywords if k}, key=len, reverse=True) # clean and sort the keywords in descending order, so that for example, 'high end' is checked before 'high'
     patterns = [(c, re.compile(rf'\b{re.escape(c)}\b')) for c in cleaned] # make a list of tuples of (keyword, regex pattern with the keyword)
 
@@ -166,9 +179,14 @@ slot_mention_patterns = {
 }
 
 def first_match(patterns, text):
-    '''
-    return the first match found in the text using the list of regex patterns
-    '''
+    """Return the first keyword whose regex matches the text.
+
+    Inputs:
+        patterns: Sequence of `(keyword, compiled_regex)` pairs to test.
+        text: Normalized string to search.
+    Returns:
+        Matching keyword string, or `None` if no pattern matches.
+    """
     for keyword, pattern in patterns:
         if pattern.search(text): # if a match is found
             return keyword # return the keyword
@@ -177,9 +195,14 @@ def first_match(patterns, text):
 
 
 def first_match_with_span(patterns, text):
-    '''
-    return the first match and its span found in the text using the list of regex patterns
-    '''
+    """Find the first matching keyword along with its span in the text.
+
+    Inputs:
+        patterns: Sequence of `(keyword, compiled_regex)` pairs to test.
+        text: Normalized string to search.
+    Returns:
+        Tuple containing the keyword and its `(start, end)` span, or `(None, None)` if absent.
+    """
     for keyword, pattern in patterns:
         match = pattern.search(text)
         if match:
@@ -188,9 +211,13 @@ def first_match_with_span(patterns, text):
     return None, None
 
 def detect_preference_mentions(text: str):
-    '''
-    check if the user has mentioned a preference slot even if we cannot map it to a known value
-    '''
+    """Flag whether the utterance references each slot regardless of value.
+
+    Inputs:
+        text: Raw user utterance to scan for slot mentions.
+    Returns:
+        Dictionary mapping slot names to booleans indicating mention presence.
+    """
     cleaned_text = clean_text(text)
     mentions = {}
     for slot, patterns in slot_mention_patterns.items():
@@ -199,11 +226,15 @@ def detect_preference_mentions(text: str):
     return mentions
 
 def map_keyword_to_option(keyword, keyword_map, options):
-    '''
-    map the keyword to the corresponding option using the keyword_map. for example, map 'high end' to 'expensive'.
-    if the keyword is not in the map, return the keyword itself if it is a valid option
-    otherwise, return None
-    '''
+    """Resolve a matched keyword to a canonical slot value.
+
+    Inputs:
+        keyword: Text fragment detected in the utterance.
+        keyword_map: Dictionary mapping synonyms to canonical values.
+        options: Set of allowable canonical values for the slot.
+    Returns:
+        Canonical slot value string, or `None` if the keyword cannot be mapped.
+    """
     if not keyword:
         return None
 
@@ -215,7 +246,16 @@ def map_keyword_to_option(keyword, keyword_map, options):
         return None
 
 def fuzzy_find_keyword(text: str, keyword_map, options, max_distance: int = 3):
-    '''use Levenshtein distance to recover close matches (e.g., "afrcan" -> "african")'''
+    """Recover misspelled slot values using Levenshtein distance.
+
+    Inputs:
+        text: Raw user utterance to inspect.
+        keyword_map: Synonym-to-canonical mapping for the slot.
+        options: Set of valid canonical values (including `dontcare`).
+        max_distance: Maximum edit distance tolerated for matches.
+    Returns:
+        Canonical value string when a close match is found, otherwise `None`.
+    """
     if levenshtein_distance is None:  # bail out when the optional dependency is missing
         return None
 
@@ -272,6 +312,13 @@ def fuzzy_find_keyword(text: str, keyword_map, options, max_distance: int = 3):
     return None  # nothing fell within the allowed edit distance
 
 def extract_keywords(text: str):
+    """Extract pricerange, area, and food preferences from free-form text.
+
+    Inputs:
+        text: User utterance describing restaurant preferences.
+    Returns:
+        Dict with keys `pricerange`, `area`, and `food` mapped to detected values or `None`.
+    """
     original_text = text
     text = text.lower() # convert input to lowercase
     output = {"pricerange": None,

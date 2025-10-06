@@ -20,7 +20,15 @@ def look_for_multiple_dialog_acts(
     dialog_acts: Optional[Iterable[str]] = None,
     encoding: str = "utf-8",
 ) -> int:
-    """Print lines that repeat the same dialog act and return the count."""
+    """Identify dataset rows repeating the same dialog act twice.
+
+    Inputs:
+        input_file: Path to the dialog-act dataset to inspect.
+        dialog_acts: Optional iterable of dialog acts to consider when checking duplicates.
+        encoding: File encoding used to read the dataset.
+    Returns:
+        Integer count of rows where the same dialog act label appears twice.
+    """
     acts = (
         list(dialog_acts)
         if dialog_acts is not None
@@ -63,7 +71,15 @@ def convert_data_to_lowercase(
     output_file: str | Path,
     encoding: str = "utf-8",
 ) -> None:
-    """Lowercase the contents of ``input_file`` and write them to ``output_file``."""
+    """Lowercase a dataset file and persist the transformed text.
+
+    Inputs:
+        input_file: Source dataset whose contents will be lowercased.
+        output_file: Destination file to write the lowercased text.
+        encoding: Encoding to use when reading and writing files.
+    Returns:
+        None; writes the transformed file and logs the output path.
+    """
     with open(input_file, "r", encoding=encoding) as fin:
         text_lower = fin.read().lower()
 
@@ -79,7 +95,16 @@ def plot_dialog_act_counts(
     title: str = "Dialog act frequency",
     encoding: str = "utf-8",
 ) -> dict[str, int]:
-    """Plot label frequencies for ``dat_path`` and return the counts."""
+    """Compute and visualize dialog-act label frequencies from a .dat file.
+
+    Inputs:
+        dat_path: Path to the labeled .dat dataset.
+        save_path: Optional path to save the rendered plot instead of showing it.
+        title: Title to display on the generated plot.
+        encoding: Encoding to use when reading the dataset.
+    Returns:
+        Dictionary mapping dialog-act labels to their occurrence counts.
+    """
     counts: Counter[str] = Counter()
     total_lines = 0
     skipped = 0
@@ -125,7 +150,15 @@ def remove_duplicates(
     output_file: str | Path,
     encoding: str = "utf-8",
 ) -> None:
-    """Remove duplicated lines while preserving order."""
+    """Remove duplicate rows from a dataset file while preserving order.
+
+    Inputs:
+        input_file: Path to the source dataset containing potential duplicates.
+        output_file: Destination file where only unique lines will be written.
+        encoding: Encoding used for file I/O operations.
+    Returns:
+        None; writes the deduplicated dataset and logs summary counts.
+    """
     seen: set[str] = set()
     unique_lines: list[str] = []
     total_lines_in_source = 0

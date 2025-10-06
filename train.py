@@ -18,6 +18,13 @@ import joblib
 
 
 def main():
+    """Parse CLI args, train the selected model, and optionally persist artifacts.
+
+    Inputs:
+        Reads command-line arguments for model choice, dataset path, and artifact output folder.
+    Returns:
+        None; prints evaluation metrics and writes artifacts when a save directory is supplied.
+    """
     parser = argparse.ArgumentParser(description="Train a model on dialog acts")
     parser.add_argument(
         "-m",
