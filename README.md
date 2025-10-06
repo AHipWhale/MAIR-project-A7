@@ -4,37 +4,44 @@ Project for dialog act classification.
 
 # Getting Started
 Before running any code, please install the right packages by running `pip install -r requirements.txt`. Please use Python version 3.12.1
-To run train, inference and evaluation, please check the instructions in the respective sections.
+<br>To run train, inference and evaluation, please check the instructions in the respective sections.
 
 # Dialog Management System
-The Dialog Management System is located in `dialog_agent.py`. To run the dialog management system, run that file. By default it uses a decision tree model saved in `artifacts/dt` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
+The Dialog Management System is located in `dialog_agent.py`. To run the dialog management system, run that file. By default it uses a decision tree model saved in `saved_models/decision_tree` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. The model the dialog manager can be changed to any of the folder names present in the `saved_models` folder. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
 <br><br>
-If you want to see what information the system saves and what states it transitions into, set `debug_mode=True`, default: `debug_mode=False` when making a new instance of the dialogAgent class. Example: `agent = dialogAgent(model_path='artifacts/dt', debug_mode=True)`
+If you want to see what information the system saves and what states it transitions into, set `debug_mode=True`, default: `debug_mode=False` when making a new instance of the dialogAgent class. Example: `agent = dialogAgent(model_path='saved_models/decision_tree', debug_mode=True)`. This can be changed at the bottom of the `dialog_agent.py` file. 
+<br>When `debug_mode=True` the user can give `exit` as user utterance to stop the dialog manager.
 
 ## Configurable Features (`config.json`)
 - `config.json` in the project root controls runtime behaviour flags for the dialog agent.
 - Each option is a boolean; set to `true` to enable the corresponding behaviour and `false` to disable it.
 - Update the file manually or run `python -m json.tool config.json` afterwards to verify the JSON stays valid.
 - Current keys:
-  - `Ask confirmation for each preference or not`: when `true`, the agent confirms every extracted preference with the user.
+  - `Ask confirmation for each preference or not`: when `true`, the agent confirms every extracted preference with the user. Use utterances such as 'yes' or 'no' when conformation is asked. 
+    - Example of when the system asks for conformation: <br>`system: You chose price cheap. Is that correct?`
   - `Allow dialog restarts or not`: when `true`, the agent allows the conversation to restart if the user requests it. Use utterances such as 'let's start over' or just 'restart' 
   - `Informal language instead of formal`: when `true`, responses use informal phrasing; switch to `false` for formal language.
   - `Preferences are asked in random order`: when `true`, the agent randomises the order in which missing preferences are asked.
 
 # Baseline Models
-All code for this part can be found in `baseline_models_code`.
+The main code for the baseline models can be found in `baseline_models_code`.
+<br>
+`baseline_ui.py` is a file with the code to run the UI for the baseline models. With this UI you can test the models on a file with utterances or test the rule-based baseline model by giving your own utterances and the model will classify it.
 
 ## Quick Start
-Run `baseline_models_code/main.py`.<br>
+Run `baseline_ui.py`.<br>
 This will start a Terminal UI with three input options:
 - `file`: Run both baseline models on `datasets/dialog_acts.dat` and shows metric scores.
 - `try me`: User inputs utterance for the Rule Based Baseline model to classify and gives prediction on given utterance.
 - `exit`: Stop script.
 
-## Files (`baseline_models_code/.`)
-- `main.py`: Main file where data is prepared for baseline models, predictions are executed and terminal UI code can be found.
-- `baseline_inform.py`: Class file for the Baseline model that always classifies utterances as 'inform'.
-- `baseline_rulebased.py`: Class file for the Baseline model that classifies utterances based on keyword.
+## Files 
+- `baseline_models_code/.`
+  - `main.py`: Main file where functions can be found that prepare the data for baseline models, execute predictions and calculate metrics for evalutation of the baseline models. 
+  - `baseline_inform.py`: Class file for the Baseline model that always classifies utterances as 'inform'.
+  - `baseline_rulebased.py`: Class file for the Baseline model that classifies utterances based on keyword.
+  - `baseline_difficult_cases.py`: A file with one function that is used to test a difficult cases on both baseline models. In the file the function is called twice, ones for every difficult case file.
+- `baseline_ui.py`: File with all the code for the UI. This file uses functions from `baselein_models_code/main.py`. By default the file that is tested is, `datasets/dialog_acts.dat`. However this can be changed to any other file that is structered where the first word of every line is the dialog act label and the rest of the line is the utterance. To change this, change the `file_path` value at line 64.
 
 # Machine Learning models
 
