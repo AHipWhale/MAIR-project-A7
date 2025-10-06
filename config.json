@@ -1,6 +1,6 @@
 {
-  "Ask confirmation for each preference or not": true,
-  "Allow dialog restarts or not": true,
-  "Informal language instead of formal": true,
-  "Preferences are asked in random order": true
+  "Ask confirmation for each preference or not": false,
+  "Allow dialog restarts or not": false,
+  "Informal language instead of formal": false,
+  "Preferences are asked in random order": false
 }
