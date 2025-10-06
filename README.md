@@ -11,6 +11,16 @@ The Dialog Management System is located in `dialog_agent.py`. To run the dialog 
 <br><br>
 If you want to see what information the system saves and what states it transitions into, set `debug_mode=True`, default: `debug_mode=False` when making a new instance of the dialogAgent class. Example: `agent = dialogAgent(model_path='artifacts/dt', debug_mode=True)`
 
+## Configurable Features (`config.json`)
+- `config.json` in the project root controls runtime behaviour flags for the dialog agent.
+- Each option is a boolean; set to `true` to enable the corresponding behaviour and `false` to disable it.
+- Update the file manually or run `python -m json.tool config.json` afterwards to verify the JSON stays valid.
+- Current keys:
+  - `Ask confirmation for each preference or not`: when `true`, the agent confirms every extracted preference with the user.
+  - `Allow dialog restarts or not`: when `true`, the agent allows the conversation to restart if the user requests it. Use utterances such as 'let's start over' or just 'restart' 
+  - `Informal language instead of formal`: when `true`, responses use informal phrasing; switch to `false` for formal language.
+  - `Preferences are asked in random order`: when `true`, the agent randomises the order in which missing preferences are asked.
+
 # Baseline Models
 All code for this part can be found in `baseline_models_code`.
 
