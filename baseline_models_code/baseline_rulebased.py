@@ -20,8 +20,12 @@ class BaselineRuleBased:
         self.thankyou = ['thank']
 
     def predict(self, data: list) -> list:
-        """
-        Predict dialog act based on presence of keywords in utterance
+        """Predict dialog act based on presence of keywords in utterance.
+
+        Inputs:
+            data: List of utterances to be classified.
+        Returns:
+            List of predicted dialog act labels corresponding to input utterances.
         """
         predicted_results = []
 
