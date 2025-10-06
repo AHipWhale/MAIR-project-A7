@@ -125,7 +125,8 @@ Each run prints accuracy, a full classification report, and a confusion matrix f
 - `preprocess_dataset/`: helpers for loading, stratified splitting, vectorising, and label encoding
 - `utils.py`: CLI utilities for lowercasing, deduplicating, plotting label counts, and auditing duplicates; run `python utils.py --help` to explore the commands
 
-## Example conversation
+## Example conversations
+### 1
 ```bash
 $ python dialog_agent.py 
 system: Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?
@@ -141,6 +142,20 @@ user: no
 system: la margherita is the only restaurant that meet your requirements.  What information would you like on this restaurant - phone, address or postcode?
 user: address
 system: The address of la margherita is 15 magdalene street city centre
+user: thank you!
+```
+### 2
+```bash
+$ python dialog_agent.py 
+system: Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?
+user: hello
+system: What part of town do you have in mind?
+user: id like cheap italian food from the south part of town
+system: Do you have any additional preferences?
+user: no
+system: la margherita is the only restaurant that meet your requirements.  What information would you like on this restaurant - phone, address or postcode?
+user: phone
+system: The phone number of restaurant la margherita is 01223 315232
 user: thank you!
 ```
 
