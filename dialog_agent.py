@@ -92,23 +92,23 @@ class dialogAgent():
         self.touristic = None
 
         # Prefferences order
-        self.prefference_order = ["2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] 
+        self.prefference_order = ["4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type"] 
 
     def start_dialog(self):
         """
-        Loop state transition function until the end state "9.1 Goodbye" is reached and ask for user input after each state transition.
+        Loop state transition function until the end state "13.1 Goodbye" is reached and ask for user input after each state transition.
         """
         # Loop state_transition until certain state is reached (end state)
         state = None
         user_input = None
-        while state != "9.1 Goodbye":
+        while state != "13.1 Goodbye":
             # State transition
             state, system_utterance = self.__state_transition(state, user_input)
 
             if self.debug_mode:
                 print("")
 
-            if state != "9.1 Goodbye":
+            if state != "13.1 Goodbye":
                 # Ouput system_utterance
                 print(f"system: {system_utterance}")
 
@@ -290,6 +290,19 @@ class dialogAgent():
         self.pending_prompt = None
         self.pending_message = None
 
+    def __formal_informal(self, formal_utterance: str, informal_utterance: str) -> str:
+        """Return either a formal or informal utterance based on the informal_utterances toggle.
+        
+        Inputs:
+            formal_utterance: Formal version of the utterance.
+            informal_utterance: Informal version of the utterance.
+        Returns:
+            Chosen utterance based on the informal_utterances toggle.
+        """
+        
+        if self.informal_utterances:
+            return informal_utterance
+        return formal_utterance
 
     def __state_transition(self, current_state: str, utterance: str) -> tuple:
         """
@@ -327,15 +340,13 @@ class dialogAgent():
                     classified_dialog_act = "restart"
 
         if self.allow_restart and classified_dialog_act == "restart":
+            # State 0. Restart
             if self.debug_mode:
                 print("Restart requested. Resetting dialog state.")
 
             self.__reset_dialog()
             next_state = "1. Welcome"
-            if self.informal_utterances:
-                response_utterance = WELCOME_MESSAGE_INFORMAL
-            else:
-                response_utterance = WELCOME_MESSAGE
+            response_utterance = self.__formal_informal(WELCOME_MESSAGE, WELCOME_MESSAGE_INFORMAL)
 
             self.state_history.append(next_state)
             return next_state, response_utterance
@@ -409,7 +420,7 @@ class dialogAgent():
 
         # Extract info based on dialog act (could be call to function)
         # only change value to 'dontcare' for the assiciated current state
-        if classified_dialog_act == 'inform' or (classified_dialog_act in ["request", "reqalts"] and current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"]):
+        if classified_dialog_act == 'inform' or (classified_dialog_act in ["request", "reqalts"] and current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type"]):
             output = extract_keywords(utterance)
             captured_entries = []
 
@@ -417,36 +428,36 @@ class dialogAgent():
                 print("extract keywords output", output)
 
             if output['area'] != None:
-                if (output['area'] == 'dontcare' and current_state == "2.2 Ask Area") or output['area'] != 'dontcare':
+                if (output['area'] == 'dontcare' and current_state == "4.2 Ask Area") or output['area'] != 'dontcare':
                     if self.confirm_preferences:
                         captured_entries.append({
                             "slot": "area",
                             "value": output['area'],
-                            "ask_state": "2.2 Ask Area",
+                            "ask_state": "4.2 Ask Area",
                             "prompt": "What part of town do you have in mind?",
                         })
                     else:
                         self.area = output['area']
 
             if output["pricerange"] != None:
-                if (output['pricerange'] == 'dontcare' and current_state == "3.2 Ask price") or output['pricerange'] != 'dontcare':
+                if (output['pricerange'] == 'dontcare' and current_state == "5.2 Ask Price") or output['pricerange'] != 'dontcare':
                     if self.confirm_preferences:
                         captured_entries.append({
                             "slot": "price",
                             "value": output['pricerange'],
-                            "ask_state": "3.2 Ask price",
+                            "ask_state": "5.2 Ask Price",
                             "prompt": "How pricey would you like the restaurant to be?",
                         })
                     else:
                         self.price = output['pricerange']
 
             if output["food"] != None:
-                if (output['food'] == 'dontcare' and current_state == "4.2 Ask Food type") or output['food'] != 'dontcare':
+                if (output['food'] == 'dontcare' and current_state == "6.2 Ask Food type") or output['food'] != 'dontcare':
                     if self.confirm_preferences:
                         captured_entries.append({
                             "slot": "food",
                             "value": output['food'],
-                            "ask_state": "4.2 Ask Food type",
+                            "ask_state": "6.2 Ask Food type",
                             "prompt": "What kind of food would you like?",
                         })
                     else:
@@ -471,16 +482,18 @@ class dialogAgent():
                 print(f"Price changed to: {self.price}") # debug
                 print(f"Food changed to: {self.food}") # debug
 
+        # 3.3 Remove item from list
         # Remove preferences if they are already known
-        if self.area != None and "2.2 Ask Area" in self.prefference_order:
-            self.prefference_order.remove("2.2 Ask Area")
-        if self.price != None and "3.2 Ask price" in self.prefference_order:
-            self.prefference_order.remove("3.2 Ask price")
-        if self.food != None and "4.2 Ask Food type" in self.prefference_order:
-            self.prefference_order.remove("4.2 Ask Food type")
+        if self.area != None and "4.2 Ask Area" in self.prefference_order:
+            self.prefference_order.remove("4.2 Ask Area")
+        if self.price != None and "5.2 Ask Price" in self.prefference_order:
+            self.prefference_order.remove("5.2 Ask Price")
+        if self.food != None and "6.2 Ask Food type" in self.prefference_order:
+            self.prefference_order.remove("6.2 Ask Food type")
 
+        # 3.1 What is the first item in list 'order'
         # Assign current state based on prefference order
-        if current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and len(self.prefference_order) != 0:
+        if current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type"] and len(self.prefference_order) != 0:
             current_state = self.prefference_order[0]
             
             if self.debug_mode:
@@ -492,70 +505,56 @@ class dialogAgent():
         if current_state is None and utterance is None:
             # State "1. Welcome"
             next_state = "1. Welcome"
-            if self.informal_utterances:
-                response_utterance = WELCOME_MESSAGE_INFORMAL
-            else:
-                response_utterance = WELCOME_MESSAGE
+            
+            response_utterance = self.__formal_informal(WELCOME_MESSAGE, WELCOME_MESSAGE_INFORMAL)
 
-            # randomize order
-            if self.random_order:
+            # 2.2 Randomize list 'order'
+            if self.random_order: # 2.1 Randomize order?
                 random.shuffle(self.prefference_order)
 
             if self.debug_mode:
                 print("Entered State '1. Welcome'")
 
-        # State "1. Welcome" or "2.2 Ask Area" to "2.2 Ask Area"
-        elif current_state  == "2.2 Ask Area" and self.area == None: # 2.1 Area Known?
-            # State "2.2 Ask Area"
-            next_state = "2.2 Ask Area"
+        # State "1. Welcome" or "4.2 Ask Area" to "4.2 Ask Area"
+        elif current_state  == "4.2 Ask Area" and self.area == None: # 4.1 Area Known?
+            # State "4.2 Ask Area"
+            next_state = "4.2 Ask Area"
 
-            if self.informal_utterances:
-                response_utterance = "Where about in town do you wanna eat?"
-            else:
-                response_utterance = "What part of town do you have in mind?"
+            response_utterance = self.__formal_informal("What part of town do you have in mind?", "Where about in town do you wanna eat?")
 
             if self.debug_mode:
-                print("Entered State '2.2 Ask Area'")
+                print("Entered State '4.2 Ask Area'")
 
-        # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" to "3.2 Ask price"
-        elif current_state == "3.2 Ask price" and self.price == None: # 3.1 Price known?
-            # State "3.2 Ask price"
-            next_state = "3.2 Ask price"
+        # State "1. Welcome" or "4.2 Ask Area" or "5.2 Ask Price" to "5.2 Ask Price"
+        elif current_state == "5.2 Ask Price" and self.price == None: # 5.1 Price known?
+            # State "5.2 Ask Price"
+            next_state = "5.2 Ask Price"
 
-            if self.informal_utterances:
-                response_utterance = "How pricey do you want your meal to be?"
-            else:
-                response_utterance = "How pricey would you like the restaurant to be?"
+            response_utterance = self.__formal_informal("How pricey would you like the restaurant to be?", "How pricey do you want your meal to be?")
 
             if self.debug_mode:
-                print("Entered State '3.2 Ask price'")
+                print("Entered State '5.2 Ask Price'")
         
-        # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4,2 Ask Food type" to "4.2 Ask Food type"
-        elif current_state == "4.2 Ask Food type" and self.food == None: # 4.1 Food type known?
-            # State "4.2 Ask Food type"
-            next_state = "4.2 Ask Food type"
+        # State "1. Welcome" or "4.2 Ask Area" or "5.2 Ask Price" or "6.2 Ask Food type" to "6.2 Ask Food type"
+        elif current_state == "6.2 Ask Food type" and self.food == None: # 6.1 Food type known?
+            # State "6.2 Ask Food type"
+            next_state = "6.2 Ask Food type"
             
-            if self.informal_utterances:
-                response_utterance = "What kind of food are you in the mood for?"
-            else:
-                response_utterance = "What kind of food would you like?"
+            response_utterance = self.__formal_informal("What kind of food would you like?", "What kind of food are you in the mood for?")
 
             if self.debug_mode:
-                print("Entered State '4.2 Ask Food type'")
+                print("Entered State '6.2 Ask Food type'")
         
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
-            # State "..." (additional preferences)
-            next_state = "4.1 Ask for additional preferences"
+        elif current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
+            # State "8.1 Ask for additional preferences"
+            next_state = "8.1 Ask for additional preferences"
             
-            if self.informal_utterances:
-                response_utterance = "Any more preferences?"
-            else:
-                response_utterance = "Do you have any additional preferences?"
+            response_utterance = self.__formal_informal("Do you have any additional preferences?", "Any more preferences?")
 
-        # State "1. Welcome" or "2.2 Ask Area" or "3.2 Ask price" or "4.2 Ask Food type" or "5.2 Change 1 of preferences" to "5.2 Change 1 of preferences" or "6.1 Suggest restaurant"
-        elif current_state in ["1. Welcome", "2.2 Ask Area", "3.2 Ask price", "4.2 Ask Food type", "4.1 Ask for additional preferences", "5.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 5.1 Is there a match
+        # State "1. Welcome" or "4.2 Ask Area" or "5.2 Ask Price" or "6.2 Ask Food type" or "9.2 Change 1 of preferences" to "9.2 Change 1 of preferences" or "10.1 Suggest restaurant"
+        elif current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type", "8.1 Ask for additional preferences", "9.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 9.1 Is there a match
             
-            if current_state == "4.1 Ask for additional preferences":
+            if current_state == "8.1 Ask for additional preferences":
                 # extract preferences from utterance
                 if "romantic" in utterance:
                     self.romantic = True
@@ -578,27 +577,21 @@ class dialogAgent():
             possible_restaurant_count = len(filtered_possible_restaurants)
 
             if possible_restaurant_count == 0: # If there are no restaurants that meet requirements
-                # State "5.2 Change 1 of preferences"
-                next_state = "5.2 Change 1 of preferences"
+                # State "9.2 Change 1 of preferences"
+                next_state = "9.2 Change 1 of preferences"
                 
-                if self.informal_utterances:
-                    response_utterance = "Sorry man, no restaurants meet your preference. Please try a different area, price range or food type."
-                else:
-                    response_utterance = "There are no restaurants that meet your requirements. Would you like to change the area, pricerange or foodtype? And what would you like to change it to?"
-
+                response_utterance = self.__formal_informal("There are no restaurants that meet your requirements. Would you like to change the area, pricerange or foodtype? And what would you like to change it to?", "Sorry man, no restaurants meet your preference. Please try a different area, price range or food type.")
+                
                 if self.debug_mode:
-                    print("Entered State '5.2 Change 1 of preferences'")
+                    print("Entered State '9.2 Change 1 of preferences'")
 
             else:
                 if possible_restaurant_count == 1: # If there is one restaurant that meet requirements
                     self.sugg_restaurant = filtered_possible_restaurants[0]
 
                     # explain reasoning if additional preferences were given
-                    if self.informal_utterances:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only match. What info would you like on this restaurant - phone, address or postcode?"
-                    else:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode?"
-                    
+                    response_utterance = self.__formal_informal(f"{self.sugg_restaurant['restaurantname']} is the only restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode?", f"{self.sugg_restaurant['restaurantname']} is the only match. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode?")
+
                 else: # If there are multiple restaurants that meet requirements
                     # Choose random restaurant and save the others
                     self.sugg_restaurant = random.choice(filtered_possible_restaurants)
@@ -606,101 +599,75 @@ class dialogAgent():
                     self.restaurants.remove(self.sugg_restaurant)
 
                     # explain reasoning if additional preferences were given
-                    if self.informal_utterances:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is just what you are looking for. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode or an alternative restaurant?"
-                    else:
-                        response_utterance = f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or an alternative restaurant?"
+                    response_utterance = self.__formal_informal(f"{self.sugg_restaurant['restaurantname']} is a restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or an alternative restaurant?", f"{self.sugg_restaurant['restaurantname']} is just what you are looking for. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode or an alternative restaurant?")
                     
-                # State "6.1 Suggest restaurant"
-                next_state = "6.1 Suggest restaurant"
+                # State "10.1 Suggest restaurant"
+                next_state = "10.1 Suggest restaurant"
 
                 if self.debug_mode:
-                    print("Entered State '6.1 Suggest restaurant'")
+                    print("Entered State '10.1 Suggest restaurant'")
 
-        # State "6.1 Suggest restaurant" to "6.1 Suggest restaurant"
-        elif current_state == "6.1 Suggest restaurant" and classified_dialog_act == "reqalts":
+        # State "10.1 Suggest restaurant" to "10.1 Suggest restaurant"
+        elif current_state == "10.1 Suggest restaurant" and classified_dialog_act == "reqalts":
             # Check if there are other resaurants to suggest
             if len(self.restaurants) >= 1:
                 self.sugg_restaurant = random.choice(self.restaurants)
                 self.restaurants.remove(self.sugg_restaurant)
 
-                next_state = "6.1 Suggest restaurant"   
+                next_state = "10.1 Suggest restaurant"   
 
                 # explain reasoning if additional preferences were given
-                if self.informal_utterances:
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} match. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode or a different restaurant?"
-                else:
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or a different restaurant?" 
-            
-            else:
-                next_state = "6.1 Suggest restaurant"
-                if self.informal_utterances:
-                    response_utterance = "Sorry man no restaurants are left with your requirements, do you want to know something about the last restaurant I suggested." 
-                else:
-                    response_utterance = "There are no other restaurant left that meet your requirements. Would you like some infromation about the last suggested restaurant?"
-                
-            if self.debug_mode:
-                print("Entered State '6.1 Suggest restaurant'")
+                response_utterance = self.__formal_informal(f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} restaurant that meet your requirements. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What information would you like on this restaurant - phone, address or postcode or a different restaurant?", f"{self.sugg_restaurant['restaurantname']} is {"the only other" if len(self.restaurants) == 0 else "another"} match. {self.sugg_restaurant["reasoning_explained"] if "reasoning_explained" in self.sugg_restaurant else ""} What info would you like on this restaurant - phone, address or postcode or a different restaurant?")
 
-        # State "6.1 Suggest restaurant" or "7.1 Provide information questioned" or "8.1 Last restaurant statement" to "7.1 Provide information questioned"
-        elif current_state in ["6.1 Suggest restaurant", "7.1 Provide information questioned", "8.1 Last restaurant statement"] and classified_dialog_act == "request":
+            else:
+                next_state = "10.1 Suggest restaurant"
+
+                response_utterance = self.__formal_informal("There are no other restaurant left that meet your requirements. Would you like some infromation about the last suggested restaurant?", "Sorry man no restaurants are left with your requirements, do you want to know something about the last restaurant I suggested.")
+
+            if self.debug_mode:
+                print("Entered State '10.1 Suggest restaurant'")
+
+        # State "10.1 Suggest restaurant" or "11.1 Provide information questioned" or "12.1 Last restaurant statement" to "11.1 Provide information questioned"
+        elif current_state in ["10.1 Suggest restaurant", "11.1 Provide information questioned", "12.1 Last restaurant statement"] and classified_dialog_act == "request":
             # Generate response utterance based on requested info, like phone number, address or postcode
             if any(word in utterance for word in ["phone", "phonenumber", "telephone", "number"]):
-                if self.informal_utterances:
-                    response_utterance = f"You can call {self.sugg_restaurant['restaurantname']} with {self.sugg_restaurant['phone']}"
-                else:
-                    response_utterance = f"The phone number of restaurant {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['phone']}"
+                response_utterance = self.__formal_informal(f"The phone number of restaurant {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['phone']}", f"You can call {self.sugg_restaurant['restaurantname']} with {self.sugg_restaurant['phone']}")
             
             elif any(word in utterance for word in ["address","adress","street"]):
-                if self.informal_utterances:
-                    response_utterance = f"{self.sugg_restaurant['restaurantname']} is on {self.sugg_restaurant['addr']}"
-                else:
-                    response_utterance = f"The address of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['addr']}"
+                response_utterance = self.__formal_informal(f"The address of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['addr']}", f"{self.sugg_restaurant['restaurantname']} is on {self.sugg_restaurant['addr']}")
             
             elif any(word in utterance for word in ["postal", "postcode", "zip", "post", "code"]):
-                if self.informal_utterances:
-                    response_utterance = f"You can find {self.sugg_restaurant['restaurantname']} over here {self.sugg_restaurant['postcode']}"
-                else:
-                    response_utterance = f"The postcode of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['postcode']}"
-            
-            else:
-                if self.informal_utterances:
-                    response_utterance = f"Here you have some information about {self.sugg_restaurant['restaurantname']}, phone number: '{self.sugg_restaurant['phone']}', address: '{self.sugg_restaurant['addr']}' and postcode: '{self.sugg_restaurant['postcode']}'"
-                else:
-                    response_utterance = f"The detail information of {self.sugg_restaurant['restaurantname']} are phone number: '{self.sugg_restaurant['phone']}', address: '{self.sugg_restaurant['addr']}' and postcode: '{self.sugg_restaurant['postcode']}'"
+                response_utterance = self.__formal_informal(f"The postcode of {self.sugg_restaurant['restaurantname']} is {self.sugg_restaurant['postcode']}", f"You can find {self.sugg_restaurant['restaurantname']} over here {self.sugg_restaurant['postcode']}")
 
-            # State "7.1 Provide information questioned"
-            next_state = "7.1 Provide information questioned"
+            else:
+                response_utterance = self.__formal_informal(f"The detail information of {self.sugg_restaurant['restaurantname']} are phone number: '{self.sugg_restaurant['phone']}', address: '{self.sugg_restaurant['addr']}' and postcode: '{self.sugg_restaurant['postcode']}'", f"Here you have some information about {self.sugg_restaurant['restaurantname']}, phone number: '{self.sugg_restaurant['phone']}', address: '{self.sugg_restaurant['addr']}' and postcode: '{self.sugg_restaurant['postcode']}'")
+
+            # State "11.1 Provide information questioned"
+            next_state = "11.1 Provide information questioned"
 
             if self.debug_mode:
-                print("Entered State '7.1 Provide information questioned'")
+                print("Entered State '11.1 Provide information questioned'")
 
-        # State "6.1 Suggest restaurant" to "8.1 Last restaurant statement"    
-        elif current_state in ["6.1 Suggest restaurant", "7.1 Provide information questioned"] and classified_dialog_act in {"confirm", "affirm", "null"}:
-            # "8.1 Last restaurant statement"
-            next_state = "8.1 Last restaurant statement"
-            if self.informal_utterances:
-                response_utterance = f"Restaurant {self.sugg_restaurant['restaurantname']} is great! You will love it!"
-            else:
-                response_utterance = f"Restaurant {self.sugg_restaurant['restaurantname']} is an outstanding restaurant."
+        # State "10.1 Suggest restaurant" to "12.1 Last restaurant statement"    
+        elif current_state in ["10.1 Suggest restaurant", "11.1 Provide information questioned"] and classified_dialog_act in {"confirm", "affirm", "null"}:
+            # "12.1 Last restaurant statement"
+            next_state = "12.1 Last restaurant statement"
+            response_utterance = self.__formal_informal(f"Restaurant {self.sugg_restaurant['restaurantname']} is an outstanding restaurant.", f"Restaurant {self.sugg_restaurant['restaurantname']} is great! You will love it!")
 
             if self.debug_mode:
-                print("Entered State '8.1 Last restaurant statement'")
+                print("Entered State '12.1 Last restaurant statement'")
         
-        # State "8.1 Last restaurant statement" or "7.1 Provide information questioned" to "9.1 Goodbye"
-        elif current_state in ["7.1 Provide information questioned", "8.1 Last restaurant statement"] and classified_dialog_act in ["bye", 'thankyou']:
-            # "9.1 Goodbye"
-            next_state = "9.1 Goodbye"
+        # State "12.1 Last restaurant statement" or "11.1 Provide information questioned" to "13.1 Goodbye"
+        elif current_state in ["11.1 Provide information questioned", "12.1 Last restaurant statement"] and classified_dialog_act in ["bye", 'thankyou']:
+            # "13.1 Goodbye"
+            next_state = "13.1 Goodbye"
             response_utterance = None
 
             if self.debug_mode:
-                print("Entered State '9.1 Goodbye'")
+                print("Entered State '13.1 Goodbye'")
         else:
             next_state = current_state
-            if self.informal_utterances:
-                response_utterance = "Sorry man, didn't get that can you rephrase it?"
-            else:
-                response_utterance = "I didn't understand, could you rephrase it in a different way?"
+            response_utterance = self.__formal_informal("I didn't understand, could you rephrase it in a different way?", "Sorry man, didn't get that can you rephrase it?")
 
             if self.debug_mode:
                 print(f"Entered no state with next_state: '{next_state}' and response_utterance: '{response_utterance}'")
@@ -708,7 +675,7 @@ class dialogAgent():
 
         # To exit programme (DEBUG)
         if utterance == "exit" and self.debug_mode:
-            next_state = "9.1 Goodbye"
+            next_state = "13.1 Goodbye"
             response_utterance = "Goodbye!"
 
         # Save state in state_history
