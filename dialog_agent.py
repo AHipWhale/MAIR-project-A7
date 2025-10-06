@@ -116,8 +116,15 @@ class dialogAgent():
                 user_input = input("user: ").strip().lower()
     
     def __look_up_restaurants(self, area: str = None , priceRange: str = None, food_type: str = None) -> list:
-        """
-        Look up restaurants from database, based on given requirements
+        """Look up restaurants from database, based on given requirements.
+
+        Inputs:
+            area: Area preference.
+            priceRange: Price range preference.
+            food_type: Food type preference.
+        
+        Returns:
+            List of restaurants that meet the given requirements.
         """
         #load dataframe
         df = pd.read_csv(self.restaurant_info_path)
@@ -147,17 +154,20 @@ class dialogAgent():
         """
         Applies reasoning rules on and filters restaurants in 'possible_restaurants' based on given additional preferences.
         Additional preferences are stored in: self.touristic, self.assigned_seats, self.children and self.romantic.
-        Returns list of restaurants that meet the additional preferences.
+        
+        Inputs:
+            possible_restaurants: List of restaurants.
+        
+        Returns:
+            List of restaurants that meet the additional preferences.
         """
         restaurants_to_remove = []
 
+        # Loop trough every restaurant and check if it meets the additional preferences
         for restaurant in possible_restaurants:
             remove_restaurant = False
 
             if self.touristic:
-                # cheap and good food = True
-                # romanian = False
-
                 if restaurant["food"] == "romanian":
                     romanian = True
                 else:
@@ -177,18 +187,16 @@ class dialogAgent():
                     restaurant["reasoning_explained"] = f"This restaurant is great for tourists, because the food quality is {restaurant["food_quality"]} and the food is {restaurant["pricerange"]}."
             
             if self.assigned_seats:
-                # busy = True
                 if restaurant["crowdedness"] != "busy":
                     remove_restaurant = True
                 else:
                     # explain why this restaurant fits the additional requirements
-                    if "reasoning_explained" in restaurant: #self.touristic:
+                    if "reasoning_explained" in restaurant:
                         restaurant["reasoning_explained"] += f" This restaurant is also assignes your seats because the crowdedness is {restaurant["crowdedness"]}."
                     else:
                         restaurant["reasoning_explained"] = f"This restaurant assignes your seats because the crowdedness is {restaurant["crowdedness"]}."
             
             if self.children:
-                # long stay = False
                 if restaurant["length_of_stay"] == "long":
                     remove_restaurant = True
                 else:
@@ -199,8 +207,6 @@ class dialogAgent():
                         restaurant["reasoning_explained"] = f"This restaurant is good for taking children to, because your expected to stay for a {restaurant["length_of_stay"]} time."
                 
             if self.romantic:
-                # busy = False
-                # long stay = True
                 if restaurant["crowdedness"] == "busy":
                     busy = True
                 else:
@@ -211,13 +217,13 @@ class dialogAgent():
                 else:
                     long_stay = False
                 
-                if long_stay == False: # long stay priority over busy
+                if long_stay == False: 
                     remove_restaurant = True
                 elif busy:
                     remove_restaurant = True
                 else:
                     # explain why this restaurant fits the additional requirements
-                    if "reasoning_explained" in restaurant: #self.touristic or self.assigned_seats or self.children:
+                    if "reasoning_explained" in restaurant:
                         restaurant["reasoning_explained"] += f" This restaurant is also romantic, because crowdedness is {restaurant["crowdedness"]} and you are expected to stay for a {restaurant["length_of_stay"]} time."
                     else:
                         restaurant["reasoning_explained"] = f"This restaurant is romantic, because crowdedness is {restaurant["crowdedness"]} and you are expected to stay for a {restaurant["length_of_stay"]} time."
@@ -226,11 +232,12 @@ class dialogAgent():
                 # possible_restaurants.remove(restaurant)
                 restaurants_to_remove.append(restaurant)
         
+        # Remove restaurants that do not meet the additional preferences
         for remove_res in restaurants_to_remove:
             possible_restaurants.remove(remove_res)
         
         if self.debug_mode:
-            print(f"\nReasoning rules matches: {possible_restaurants}") # debug
+            print(f"\nReasoning rules matches: {possible_restaurants}")
 
         return possible_restaurants
 
@@ -286,7 +293,15 @@ class dialogAgent():
 
     def __state_transition(self, current_state: str, utterance: str) -> tuple:
         """
-        Classifies dialog act, extract information from utterances using keywords and transition to the next state based on important variables. Output is a tuple with the next state and the system response utterance. 
+        Classifies dialog act, extract information from utterances using keywords and transition to the next state based on important variables. 
+        
+        Inputs:
+            current_state: Current state of the dialog.
+            utterance: User input utterance.
+        
+        Returns:
+            next_state: Next state of the dialog.
+            response_utterance: System response utterance.
         """
         next_state = None
         response_utterance = None
@@ -695,8 +710,6 @@ class dialogAgent():
         if utterance == "exit" and self.debug_mode:
             next_state = "9.1 Goodbye"
             response_utterance = "Goodbye!"
-        
-            
 
         # Save state in state_history
         self.state_history.append(next_state)
@@ -707,5 +720,8 @@ if __name__ == "__main__":
     # expand csv to include 3 new columns: food_quality, crowdedness, length_of_stay
     expand_csv(Path("datasets/restaurant_info.csv"), Path("datasets/expanded_restaurant_info.csv"))
 
+    # Initialize dialog agent
     agent = dialogAgent(model_path='saved_models/decision_tree', debug_mode=True)
+
+    # Start dialog
     agent.start_dialog()
