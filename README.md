@@ -7,16 +7,19 @@ Before running any code, please install the right packages by running `pip insta
 <br>To run train, inference and evaluation, please check the instructions in the respective sections.
 
 # Dialog Management System
-The Dialog Management System is located in `dialog_agent.py`. To run the dialog management system, run that file. By default it uses a decision tree model saved in `saved_models/decision_tree` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. The model the dialog manager can be changed to any of the folder names present in the `saved_models` folder. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
+The Dialog Management System is located in `dialog_agent.py`.  
+To run the dialog management system, run that file or use `python dialog_agent.py`.  
+An example working conversation can be found in the [Example conversation](#example-conversation) section below.
+By default it uses a decision tree model saved in `saved_models/decision_tree` to classify the dialog acts based on utterances, and `datasets/restaurant_info.cvs` to get a dataset of restaurants the system could suggest. The model the dialog manager can be changed to any of the folder names present in the `saved_models` folder. Also `extract_keywords()` from `keyword_extractor.py` is used to extract usefull information from the user utterances. 
 <br><br>
 If you want to see what information the system saves and what states it transitions into, set `debug_mode=True`, default: `debug_mode=False` when making a new instance of the dialogAgent class. Example: `agent = dialogAgent(model_path='saved_models/decision_tree', debug_mode=True)`. This can be changed at the bottom of the `dialog_agent.py` file. 
 <br>When `debug_mode=True` the user can give `exit` as user utterance to stop the dialog manager.
 
-## Configurable Features (`config.json`)
+## How to use Configurable Features (`config.json`)
 - `config.json` in the project root controls runtime behaviour flags for the dialog agent.
 - Each option is a boolean; set to `true` to enable the corresponding behaviour and `false` to disable it.
 - Update the file manually or run `python -m json.tool config.json` afterwards to verify the JSON stays valid.
-- Current keys:
+- Configurable Features:
   - `Ask confirmation for each preference or not`: when `true`, the agent confirms every extracted preference with the user. Use utterances such as 'yes' or 'no' when conformation is asked. 
     - Example of when the system asks for conformation: <br>`system: You chose price cheap. Is that correct?`
   - `Allow dialog restarts or not`: when `true`, the agent allows the conversation to restart if the user requests it. Use utterances such as 'let's start over' or just 'restart' 
@@ -122,6 +125,26 @@ Each run prints accuracy, a full classification report, and a confusion matrix f
 - `preprocess_dataset/`: helpers for loading, stratified splitting, vectorising, and label encoding
 - `utils.py`: CLI utilities for lowercasing, deduplicating, plotting label counts, and auditing duplicates; run `python utils.py --help` to explore the commands
 
+## Example conversation
+```bash
+$ python dialog_agent.py 
+system: Hello , welcome to the Cambridge restaurant system? You can ask for restaurants by area , price range or food type . How may I help you?
+user: hello
+system: What part of town do you have in mind?
+user: id like the south part of town
+system: How pricey would you like the restaurant to be?
+user: cheap
+system: What kind of food would you like?
+user: italian
+system: Do you have any additional preferences?
+user: no
+system: la margherita is the only restaurant that meet your requirements.  What information would you like on this restaurant - phone, address or postcode?
+user: address
+system: The address of la margherita is 15 magdalene street city centre
+user: thank you!
+```
+
 ## Notes
 - The training pipeline drops labels with fewer than two samples so stratified splitting remains valid.
 - Logistic regression uses `solver='saga'` with `class_weight='balanced'` to handle label imbalance.
+- 

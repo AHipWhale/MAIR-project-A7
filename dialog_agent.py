@@ -695,7 +695,7 @@ if __name__ == "__main__":
     expand_csv(Path("datasets/restaurant_info.csv"), Path("datasets/expanded_restaurant_info.csv"))
 
     # Initialize dialog agent
-    agent = dialogAgent(model_path='saved_models/decision_tree', debug_mode=True)
+    agent = dialogAgent(model_path='saved_models/decision_tree')
 
     # Start dialog
     agent.start_dialog()
