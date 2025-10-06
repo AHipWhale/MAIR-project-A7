@@ -355,12 +355,14 @@ class dialogAgent():
         deny_intents = {"deny", "negate"}
 
         if self.confirm_preferences and current_state == "Confirm preference" and utterance:
+            # Handle manual confirmation fallbacks so short yes/no answers still register.
             # Allow simple yes/no replies even when the classifier mislabels them.
             normalized_utt = utterance.lower().strip()
             yes_words = {"yes", "yeah", "yep", "sure", "correct", "absolutely", "affirmative", "right"}
             no_words = {"no", "nope", "nah", "negative", "not really", "don't"}
 
             if classified_dialog_act not in confirm_intents | deny_intents:
+                # Check the first token to capture phrases like "yes please" or "no thanks".
                 first_word = normalized_utt.split()[0]
                 if normalized_utt in yes_words or first_word in yes_words:
                     if self.debug_mode:
@@ -372,9 +374,12 @@ class dialogAgent():
                     classified_dialog_act = "deny"
 
         if self.confirm_preferences and current_state == "Confirm preference":
+            # Resolve the pending confirmation once we have a confirmed dialog act.
             if self.pending_slot is None:
+                # No pending slot means we can return to whichever state we were heading to.
                 current_state = self.pending_state or current_state
             elif classified_dialog_act in confirm_intents:
+                # Persist the new preference and advance to any queued confirmations.
                 resolved_state = self.pending_state or current_state
                 slot_to_set = self.pending_slot
                 value_to_set = self.pending_value
@@ -399,6 +404,7 @@ class dialogAgent():
                 current_state = resolved_state
                 classified_dialog_act = ""
             elif classified_dialog_act in deny_intents:
+                # Revert to the previous state when the user rejects the pending preference.
                 next_state = self.pending_state or "1. Welcome"
                 response_utterance = self.pending_prompt or "Could you repeat that preference?"
 
@@ -412,6 +418,7 @@ class dialogAgent():
                 self.state_history.append(next_state)
                 return next_state, response_utterance
             else:
+                # Keep asking for confirmation until we get a clear yes/no signal.
                 next_state = "Confirm preference"
                 # Re-ask whichever confirmation message is currently pending.
                 response_utterance = self.pending_message or "Please answer yes or no so I can confirm."
