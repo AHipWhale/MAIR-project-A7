@@ -159,6 +159,28 @@ system: The phone number of restaurant la margherita is 01223 315232
 user: thank you!
 ```
 
+### 3
+```bash
+system: Eyoo, What's up? I'm gonna help you pick a restaurant to eat. Just tell me the area, price range and what type of food you like.
+user: id like cheap italian food from the south part of town
+system: You chose area south. Is that correct?
+user: yes
+system: You chose price cheap. Is that correct?
+user: yes
+system: You chose food italian. Is that correct?
+user: no
+system: What kind of food would you like?
+user: any
+system: You chose food dont care. Is that correct?
+user: yes
+system: Any more preferences?
+user: no
+system: rice house is just what you are looking for.  What info would you like on this restaurant - phone, address or postcode or an alternative restaurant?
+user: phone number please
+system: You can call rice house with 01223 367755
+user: thank you
+```
+
 ## Notes
 - The training pipeline drops labels with fewer than two samples so stratified splitting remains valid.
 - Logistic regression uses `solver='saga'` with `class_weight='balanced'` to handle label imbalance.
