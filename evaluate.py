@@ -31,7 +31,13 @@ BASELINE_MODEL_KEYS = {"baseline_inform", "baseline_rulebased"}
 
 
 def load_test_split(data_path: Path):
-    """Recreate the deterministic test split used during training."""
+    """Return the deterministic test texts/labels used for evaluation.
+
+    Inputs:
+        data_path: Filesystem path to the labeled dialog-act dataset (.dat format).
+    Returns:
+        Tuple of (x_test_text, y_test_labels) containing the held-out split.
+    """
     df = load_data_to_df(data_path)
     label_counts = df["label"].value_counts()
     rare_labels = label_counts[label_counts < 2].index.tolist()
@@ -45,6 +51,16 @@ def load_test_split(data_path: Path):
 
 
 def print_saved_model_metrics(model_name: str, y_true, y_pred, label_encoder) -> None:
+    """Display standard metrics for a saved model prediction run.
+
+    Inputs:
+        model_name: Human-readable identifier for the evaluated model.
+        y_true: Encoded ground-truth labels aligned with predictions.
+        y_pred: Encoded label predictions produced by the classifier.
+        label_encoder: Fitted encoder to translate indices back to labels.
+    Returns:
+        None; metrics are printed to stdout.
+    """
     print("\n" + "-" * 150)
     print(f"Metric scores of model: {model_name}")
     print("\nAccuracy:", accuracy_score(y_true, y_pred), "\n")
@@ -73,6 +89,17 @@ def evaluate_saved_model(
     y_test_labels,
     artifacts_dir: Path | None = None,
 ) -> None:
+    """Load persisted artifacts for `model_key` and evaluate on the test split.
+
+    Inputs:
+        model_key: Key identifying which saved model directory to inspect.
+        artifacts_root: Root folder where model artifacts are stored by default.
+        x_test_text: Iterable of raw utterances for evaluation.
+        y_test_labels: Iterable of gold dialog-act labels.
+        artifacts_dir: Optional override folder containing artifacts to load.
+    Returns:
+        None; prints metrics for the evaluated model.
+    """
     if artifacts_dir is None:
         artifacts_dir = artifacts_root / model_key
     else:
@@ -93,6 +120,15 @@ def evaluate_saved_model(
 
 
 def evaluate_baseline(model_key: str, x_test_text, y_test_labels) -> None:
+    """Run baseline heuristics on the test split and report metrics.
+
+    Inputs:
+        model_key: Baseline selector (`baseline_inform` or `baseline_rulebased`).
+        x_test_text: Iterable of utterances to classify.
+        y_test_labels: Iterable of ground-truth dialog-act labels.
+    Returns:
+        None; the function prints metric summaries.
+    """
     if model_key == "baseline_inform":
         predictor = BaselineInform()
         display_name = "Baseline Inform"
@@ -107,6 +143,13 @@ def evaluate_baseline(model_key: str, x_test_text, y_test_labels) -> None:
 
 
 def expand_model_selection(selection: str):
+    """Normalize model selection CLI input into a list of evaluable targets.
+
+    Inputs:
+        selection: CLI string specifying which models to evaluate.
+    Returns:
+        List containing canonical model keys or artifact paths to process.
+    """
     if selection == "all":
         return ["logistic_regression", "decision_tree", "baseline_inform", "baseline_rulebased"]
     if selection == "saved":
@@ -128,6 +171,13 @@ def expand_model_selection(selection: str):
 
 
 def parse_args():
+    """Configure and parse CLI arguments for the evaluation script.
+
+    Inputs:
+        None directly; relies on `sys.argv` to source arguments.
+    Returns:
+        argparse.Namespace populated with parsed command-line options.
+    """
     parser = argparse.ArgumentParser(description="Evaluate saved or baseline dialog-act models on the test split used during training.")
     parser.add_argument(
         "-m",
@@ -154,6 +204,13 @@ def parse_args():
 
 
 def main():
+    """Coordinate evaluation workflow for saved and baseline dialog-act models.
+
+    Inputs:
+        None directly; obtains configuration from parsed CLI arguments.
+    Returns:
+        None; prints evaluation metrics for each requested model.
+    """
     args = parse_args()
     data_path = Path(args.data)
     if not data_path.is_file():

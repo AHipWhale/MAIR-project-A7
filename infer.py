@@ -6,6 +6,14 @@ import joblib
 
 
 def load_artifacts(model_dir: Path):
+    """Load serialized inference assets from `model_dir`.
+
+    Inputs:
+        model_dir: Directory containing `model.joblib`, `vectorizer.joblib`,
+            `label_encoder.joblib`, and optional `metadata.json`.
+    Returns:
+        Tuple of (model, vectorizer, label_encoder, metadata dict).
+    """
     model = joblib.load(model_dir / "model.joblib")
     vectorizer = joblib.load(model_dir / "vectorizer.joblib")
     label_encoder = joblib.load(model_dir / "label_encoder.joblib")
@@ -15,6 +23,13 @@ def load_artifacts(model_dir: Path):
 
 
 def read_inputs(args):
+    """Collect inference utterances from CLI flags or a text file.
+
+    Inputs:
+        args: Parsed argparse Namespace with `input` and/or `file` attributes.
+    Returns:
+        List of non-empty utterance strings ready for vectorization.
+    """
     texts = []
     if args.input:
         texts.append(args.input)
@@ -27,6 +42,17 @@ def read_inputs(args):
     return texts
 
 def infer_utterance(model, vectorizer, label_encoder, metadata, utterance):
+    """Predict a dialog-act label for a single `utterance`.
+
+    Inputs:
+        model: Trained classifier exposing `predict`.
+        vectorizer: Text vectorizer implementing `transform`.
+        label_encoder: Encoder used to map prediction indices to labels.
+        metadata: Optional dictionary with model metadata (unused here).
+        utterance: Single text string to classify.
+    Returns:
+        Predicted dialog-act label as a string.
+    """
     if utterance is None:
         raise ValueError("utterance must be provided")
 
@@ -38,6 +64,13 @@ def infer_utterance(model, vectorizer, label_encoder, metadata, utterance):
     return str(label)
 
 def main():
+    """Entry point for running offline inference with a saved model.
+
+    Inputs:
+        None directly; reads CLI flags for model directory and inputs.
+    Returns:
+        None; prints predicted labels (and optional probabilities) to stdout.
+    """
     parser = argparse.ArgumentParser(description="Infer dialog acts using a saved model")
     parser.add_argument("--model-dir", required=True, help="Directory containing saved artifacts")
     parser.add_argument("--input", help="Single utterance to classify")

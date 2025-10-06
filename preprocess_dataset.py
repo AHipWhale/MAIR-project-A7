@@ -9,7 +9,13 @@ from sklearn.preprocessing import LabelEncoder
 
 
 def load_data_to_df(path: Union[Path, str]) -> pd.DataFrame:
-    """Load dialog-act data into a DataFrame with columns `label` and `text`."""
+    """Read a .dat dataset into a two-column pandas DataFrame.
+
+    Inputs:
+        path: Filesystem path to a whitespace-separated dialog-act dataset.
+    Returns:
+        DataFrame with columns `label` and `text` containing cleaned rows.
+    """
     data_path = Path(path)
     rows: List[Tuple[str, str]] = []
 
@@ -32,7 +38,15 @@ def load_data_to_df(path: Union[Path, str]) -> pd.DataFrame:
 def stratified_split(
     df: pd.DataFrame, test_size: float = 0.15, seed: Union[int, None] = 42
 ) -> Tuple[List[str], List[str], List[str], List[str]]:
-    """Split texts/labels into stratified train/test partitions."""
+    """Create stratified train/test splits for text and label columns.
+
+    Inputs:
+        df: DataFrame containing at least `text` and `label` columns.
+        test_size: Fraction of samples to allocate to the test split.
+        seed: Deterministic random state to reproduce splits.
+    Returns:
+        Tuple containing (x_train, x_test, y_train, y_test) lists.
+    """
     x_train, x_test, y_train, y_test = train_test_split(
         df["text"].tolist(),
         df["label"].tolist(),
@@ -48,7 +62,15 @@ def vectorize_fit_transform(
     x_train: Sequence[str],
     x_test: Sequence[str],
 ):
-    """Fit vectorizer on train split and transform both splits."""
+    """Fit the vectorizer on training texts and transform both splits.
+
+    Inputs:
+        vectorizer: CountVectorizer (or compatible) instance to train.
+        x_train: Iterable of training utterances.
+        x_test: Iterable of test utterances.
+    Returns:
+        Tuple of sparse matrices (x_train_transformed, x_test_transformed).
+    """
     x_train_transformed = vectorizer.fit_transform(x_train)
     x_test_transformed = vectorizer.transform(x_test)
     return x_train_transformed, x_test_transformed
@@ -59,7 +81,15 @@ def encode_labels(
     y_train: Sequence[str],
     y_test: Sequence[str],
 ):
-    """Fit label encoder on train split and transform both splits."""
+    """Fit the label encoder on training labels and transform both splits.
+
+    Inputs:
+        encoder: LabelEncoder (or compatible) instance to train.
+        y_train: Iterable of training label strings.
+        y_test: Iterable of test label strings.
+    Returns:
+        Tuple of numpy arrays (y_train_encoded, y_test_encoded).
+    """
     y_train_encoded = encoder.fit_transform(y_train)
     y_test_encoded = encoder.transform(y_test)
     return y_train_encoded, y_test_encoded
@@ -69,7 +99,14 @@ def summarize_labels(
     y_train: Iterable[str],
     y_test: Iterable[str],
 ) -> Tuple[Dict[str, int], Dict[str, int]]:
-    """Print and return class distribution summary for train/test splits."""
+    """Print and return class distribution statistics for each split.
+
+    Inputs:
+        y_train: Iterable of training labels.
+        y_test: Iterable of test labels.
+    Returns:
+        Tuple of dictionaries summarizing counts for train and test labels.
+    """
     print("--## Dataset Summary ##--")
     y_train_list = list(y_train)
     y_test_list = list(y_test)
@@ -92,6 +129,13 @@ def summarize_labels(
 
 
 def prepare_dataset(path: Union[Path, str]):
+    """Preprocess the dataset into vectorized splits ready for training.
+
+    Inputs:
+        path: Filesystem path to the raw dialog-act dataset (.dat format).
+    Returns:
+        Dictionary containing train/test features, encoded labels, and fitted encoders.
+    """
     df = load_data_to_df(path)
 
     label_counts = df["label"].value_counts()
