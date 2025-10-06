@@ -11,7 +11,14 @@ length_of_stay_options = ("short", "medium", "long")
 
 
 def expand_csv(input_csv: Path, output_csv: Path) -> None:
-    """Read ``input_csv`` and write an expanded copy to ``output_csv``."""
+    """Augment a restaurant CSV with simulated experience fields and save it.
+
+    Inputs:
+        input_csv: Path to the source CSV containing baseline restaurant metadata.
+        output_csv: Destination path where the enriched CSV will be written.
+    Returns:
+        None; writes out the augmented dataset unless the output already exists.
+    """
     if not input_csv.is_file():
         raise FileNotFoundError(f"Input file does not exist: {input_csv}")
 
@@ -45,6 +52,13 @@ def expand_csv(input_csv: Path, output_csv: Path) -> None:
 
 
 def parse_args() -> argparse.Namespace:
+    """Configure CLI flags for augmenting restaurant metadata CSV files.
+
+    Inputs:
+        None directly; reads arguments from `sys.argv`.
+    Returns:
+        argparse.Namespace capturing `input_csv` and `output_csv` paths.
+    """
     parser = argparse.ArgumentParser(
         description="Add synthetic experience columns to a restaurant info CSV."
     )
@@ -62,6 +76,13 @@ def parse_args() -> argparse.Namespace:
 
 
 def main() -> None:
+    """Entry point for expanding a restaurant CSV via command-line usage.
+
+    Inputs:
+        None directly; relies on parsed CLI arguments.
+    Returns:
+        None; delegates to `expand_csv` to perform augmentation.
+    """
     args = parse_args()
     expand_csv(args.input_csv, args.output_csv)
 
