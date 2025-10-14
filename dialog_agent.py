@@ -20,8 +20,11 @@ class dialogAgent():
 
         # Save path to restaurant info file
         self.restaurant_info_path = restaurant_path
-        # If the expanded file exists, use that one instead
-        if Path(restaurant_path.replace('restaurant_info', 'expanded_restaurant_info')).exists():
+        if Path(restaurant_path.replace('restaurant_info', 'expanded_lab2_restaurant_info')).exists():
+            # for lab 2, for the user to have a choice between 7 food, 5 areas and 3 price ranges, and all of them to return a restaurant, we need to add some dummy restaurants
+            self.restaurant_info_path = restaurant_path.replace('restaurant_info', 'expanded_lab2_restaurant_info')
+        elif Path(restaurant_path.replace('restaurant_info', 'expanded_restaurant_info')).exists():
+            # If the expanded file exists, use that one instead
             self.restaurant_info_path = restaurant_path.replace('restaurant_info', 'expanded_restaurant_info')
         
         # Load configuration toggles so behaviour can be switched without code changes.
