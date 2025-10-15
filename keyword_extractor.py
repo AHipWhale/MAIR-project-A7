@@ -3,7 +3,7 @@ import re
 from pathlib import Path
 from Levenshtein import distance as levenshtein_distance
 
-_DATASET_PATH = Path(__file__).resolve().parent / 'datasets' / 'restaurant_info.csv'
+_DATASET_PATH = Path(__file__).resolve().parent / 'datasets' / 'expanded_lab2_restaurant_info.csv'
 
 
 # options are loaded from the dataset once when the module is imported
@@ -402,7 +402,8 @@ if __name__ == "__main__":
         "I want a restaurant that is in the east",
         "I want north american",
         "I want asian oriental",
-        "any"
+        "any",
+        "mexican"
     ]
     for test in tests:
         print(f"Input: {test}")

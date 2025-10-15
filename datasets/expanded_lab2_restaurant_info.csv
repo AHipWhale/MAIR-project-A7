@@ -1,176 +1,179 @@
 restaurantname,pricerange,area,food,phone,addr,postcode,food_quality,crowdedness,length_of_stay
-saint johns chop house,moderate,west,british,01223 353110,21 - 24 northampton street,c.b 3,good,medium,medium
-restaurant alimentum,moderate,north,modern european,01223 413000,152 - 154 hills road,c.b 2,good,busy,long
-pizza hut cherry hinton,moderate,south,italian,01223 323737,g4 cambridge leisure park clifton way cherry hinton,c.b 1,mediocre,low,long
-the gardenia,moderate,west,romanian,01223 356354,2 rose crescent city centre,c.b 2,great,low,long
-loch fyne,moderate,centre,seafood,01223 362433,the little rose 37 trumpington street,c.b 2,great,busy,medium
-yu garden,expensive,east,chinese,01223 248882,529 newmarket road fen ditton,c.b 5,good,medium,long
-sitar tandoori,expensive,east,steakhouse,01223 249955,43 high street cherry hinton cherry hinton,c.b 1,mediocre,busy,short
-saigon city,expensive,north,asian oriental,01223 356555,169 high street chesterton chesterton,c.b 4,mediocre,busy,short
-restaurant two two,expensive,north,french,01223 351880,22 chesterton road chesterton,c.b 4,good,medium,medium
-the hotpot,expensive,north,chinese,01223 366552,66 chesterton road chesterton,c.b 4,good,medium,medium
-nandos,cheap,south,portuguese,01223 327908,cambridge leisure park clifton way,c.b 1,mediocre,low,medium
-peking restaurant,expensive,south,chinese,01223 354755,10 homerton street city centre,c.b 2,great,low,long
-rajmahal,moderate,east,indian,01223 244955,7 barnwell road fen ditton,c.b 5,great,low,long
-pizza hut fen ditton,moderate,east,italian,01223 323737,cambridge retail park newmarket road fen ditton,c.b 5,good,medium,long
-the missing sock,cheap,south,chinese,01223 812660,finders corner newmarket road,c.b 25,mediocre,busy,medium
-royal standard,expensive,east,spanish,01223 247877,290 mill road city centre,c.b 1,great,medium,medium
-grafton hotel restaurant,expensive,east,british,01223 241387,grafton hotel 619 newmarket road fen ditton,c.b 5,good,medium,short
-dojo noodle bar,expensive,centre,asian oriental,01223 363471,40210 millers yard city centre,c.b 2,great,busy,medium
-cambridge lodge restaurant,expensive,west,european,01223 355166,cambridge lodge hotel 139 huntingdon road city centre,c.b 3,great,busy,long
-thanh binh,cheap,west,vietnamese,01223 362456,17 magdalene street city centre,c.b 3,good,medium,medium
-stazione restaurant and coffee bar,expensive,centre,korean,01223 352607,market hill city centre,nan,good,busy,medium
-cote,expensive,centre,french,01223 311053,bridge street city centre,c.b 2,mediocre,busy,medium
-cotto,moderate,centre,british,01223 302010,183 east road city centre,c.b 1,great,medium,medium
-bangkok city,expensive,centre,thai,01223 354382,24 green street city centre,c.b 2,mediocre,medium,medium
-frankie and bennys,expensive,south,italian,01223 412430,cambridge leisure park clifton way cherry hinton,c.b 1,mediocre,low,long
-the cow pizza kitchen and bar,moderate,centre,moroccan,01223 308871,corn exchange street,c.b 2,mediocre,busy,long
-eraina,expensive,centre,european,01223 368786,free school lane city centre,c.b 2,great,busy,short
-curry garden,expensive,centre,asian oriental,01223 302330,106 regent street city centre,nan,good,busy,long
-mahal of cambridge,cheap,centre,indian,01223 360409,3 - 5 millers yard mill lane,nan,mediocre,low,medium
-golden wok,moderate,north,asian oriental,01223 350688,191 histon road chesterton,c.b 4,good,medium,short
-meghna,moderate,north,indian,01223 727410,205 victoria road chesterton,c.b 4,good,medium,long
-the nirala,moderate,north,indian,01223 360966,7 milton road chesterton,c.b 4,mediocre,medium,long
-michaelhouse cafe,expensive,centre,european,01223 309147,st. michael's church trinity street city centre,c.b 2,good,medium,short
-efes restaurant,moderate,centre,swiss,01223 500005,king street city centre,c.b 1,mediocre,low,long
-chiquito restaurant bar,expensive,south,european,01223 400170,2g cambridge leisure park cherry hinton road cherry hinton,c.b 1,good,medium,medium
-caffe uno,expensive,centre,italian,01223 448620,32 bridge street city centre,nan,good,low,long
-j restaurant,cheap,centre,fusion,01223 307581,86 regent street city centre,c.b 2,good,busy,medium
-la margherita,cheap,south,italian,01223 315232,15 magdalene street city centre,c.b 3,mediocre,busy,short
-cocum,expensive,east,gastropub,01223 366668,71 castle street city centre,c.b 3,great,low,short
-city stop restaurant,expensive,north,tuscan,01223 363270,cambridge city football club milton road chesterton,nan,good,medium,medium
-sala thong,expensive,west,thai,01223 323178,35 newnham road newnham,c.b 3,good,busy,short
-don pasquale pizzeria,expensive,south,european,01223 350106,12 market hill city centre,nan,mediocre,low,short
-little seoul,expensive,centre,korean,01223 308681,108 regent street city centre,c.b 2,good,busy,short
-rice house,cheap,south,chinese,01223 367755,88 mill road city centre,nan,mediocre,busy,medium
-the river bar steakhouse and grill,cheap,centre,modern european,01223 307030,quayside off bridge street,c.b 5,great,medium,medium
-nandos city centre,cheap,centre,portuguese,01223 327908,33-34 saint andrews street,c.b 2,good,medium,medium
-prezzo,moderate,west,italian,01799 521260,21 - 24 northampton road,c.b 3,great,medium,medium
-galleria,moderate,centre,european,01223 362054,33 bridge street,c.b 2,mediocre,busy,medium
-bloomsbury restaurant,moderate,north,international,0871 942 9180,crowne plaza hotel 20 downing street,c.b 2,good,medium,short
-the good luck chinese food takeaway,expensive,south,chinese,01223 244149,82 cherry hinton road cherry hinton,c.b 1,mediocre,medium,medium
-the varsity restaurant,moderate,centre,international,01223 356060,35 saint andrews street city centre,c.b 2,good,medium,short
-de luca cucina and bar,moderate,centre,modern european,01223 356666,83 regent street,c.b 2,mediocre,low,medium
-da vinci pizzeria,cheap,north,traditional,01223 351707,20 milton road chesterton,c.b 4,good,medium,medium
-shiraz restaurant,expensive,centre,mediterranean,01223 307581,84 regent street city centre,c.b 2,mediocre,busy,long
-the lucky star,cheap,south,chinese,01223 244277,cambridge leisure park clifton way cherry hinton,c.b 1,great,medium,medium
-royal spice,cheap,north,indian,01733 553355,victoria avenue chesterton,c.b 4,mediocre,low,long
-ask,cheap,centre,seafood,01223 364917,12 bridge street city centre,c.b 2,mediocre,medium,long
-taj tandoori,expensive,south,portuguese,01223 412299,64 cherry hinton road cherry hinton,c.b 1,good,busy,short
-tandoori palace,moderate,north,indian,01223 506055,68 histon road chesterton,c.b 4,mediocre,medium,long
-yippee noodle bar,moderate,centre,asian oriental,01223 518111,40428 king street city centre,c.b 1,good,low,short
-travellers rest,expensive,west,british,01223 276182,huntingdon road city centre,nan,mediocre,medium,medium
-maharajah tandoori restaurant,expensive,east,indian,01223 358399,41518 castle street city centre,c.b 3,mediocre,low,medium
-shanghai family restaurant,moderate,east,chinese,01223 301761,39 burleigh street city centre,nan,good,busy,medium
-curry prince,expensive,east,indian,01223 566388,451 newmarket road fen ditton,c.b 5,great,busy,short
-the gandhi,cheap,centre,indian,01223 353942,72 regent street city centre,nan,good,medium,medium
-kymmoy,expensive,centre,asian oriental,01223 311911,52 mill road city centre,c.b 1,good,busy,long
-golden house,cheap,centre,polynesian,01842 753771,12 lensfield road city centre,nan,mediocre,busy,medium
-bedouin,expensive,centre,african,01223 367660,100 mill road city centre,c.b 1,good,medium,short
-pipasha restaurant,expensive,east,indian,01223 577786,newmarket road fen ditton,c.b 5,great,low,long
-charlie chan,cheap,centre,chinese,01223 361763,regent street city centre,c.b 2,good,busy,long
-lan hong house,moderate,centre,thai,01223 350420,12 norfolk street city centre,nan,good,busy,long
-la tasca,moderate,centre,spanish,01223 464630,14 -16 bridge street,c.b 2,great,busy,short
-backstreet bistro,expensive,south,gastropub,01223 306306,2 sturton street city centre,c.b 1,good,low,long
-la raza,cheap,centre,spanish,01223 464550,4 - 6 rose crescent,c.b 2,mediocre,busy,long
-the slug and lettuce,expensive,east,gastropub,dontcare,34 - 35 green street,c.b 2,good,medium,medium
-restaurant one seven,moderate,north,british,01223 337766,de vere university arms regent street city centre,nan,good,medium,medium
-fitzbillies restaurant,expensive,centre,british,01223 352500,51 trumpington street city centre,nan,great,low,short
-anatolia,moderate,centre,turkish,01223 362372,30 bridge street city centre,c.b 2,good,busy,short
-clowns cafe,moderate,centre,bistro,01223 355711,nan,c.b 1,good,medium,long
-kohinoor,cheap,west,indian,01223 323639,74 mill road city centre,nan,mediocre,low,medium
-the cambridge chop house,cheap,centre,british,01223 359506,1 kings parade,nan,great,medium,short
-gourmet burger kitchen,expensive,centre,north american,01223 312598,regent street city centre,c.b 2,good,low,medium
-la mimosa,expensive,centre,mediterranean,01223 362525,thompsons lane fen ditton,c.b 5,mediocre,busy,medium
-meze bar restaurant,expensive,centre,turkish,nan,196 mill road city centre,c.b 1,great,medium,long
-the golden curry,expensive,south,australasian,01223 329432,nan,nan,mediocre,medium,long
-curry queen,moderate,nan,indian,nan,106 mill road city centre,c.b 1,great,low,medium
+saint johns chop house,medium,west,british,01223 353110,21 - 24 northampton street,c.b 3,great,busy,short
+restaurant alimentum,medium,north,modern european,01223 413000,152 - 154 hills road,c.b 2,mediocre,busy,medium
+pizza hut cherry hinton,medium,south,italian,01223 323737,g4 cambridge leisure park clifton way cherry hinton,c.b 1,good,busy,long
+the gardenia,medium,west,romanian,01223 356354,2 rose crescent city centre,c.b 2,mediocre,low,long
+loch fyne,medium,centre,seafood,01223 362433,the little rose 37 trumpington street,c.b 2,good,busy,short
+yu garden,expensive,east,chinese,01223 248882,529 newmarket road fen ditton,c.b 5,mediocre,low,medium
+sitar tandoori,expensive,east,steakhouse,01223 249955,43 high street cherry hinton cherry hinton,c.b 1,mediocre,busy,medium
+saigon city,expensive,north,asian oriental,01223 356555,169 high street chesterton chesterton,c.b 4,great,busy,medium
+restaurant two two,expensive,north,french,01223 351880,22 chesterton road chesterton,c.b 4,mediocre,low,short
+the hotpot,expensive,north,chinese,01223 366552,66 chesterton road chesterton,c.b 4,great,low,short
+nandos,cheap,south,portuguese,01223 327908,cambridge leisure park clifton way,c.b 1,great,medium,short
+peking restaurant,expensive,south,chinese,01223 354755,10 homerton street city centre,c.b 2,good,medium,short
+rajmahal,medium,east,indian,01223 244955,7 barnwell road fen ditton,c.b 5,mediocre,busy,long
+pizza hut fen ditton,medium,east,italian,01223 323737,cambridge retail park newmarket road fen ditton,c.b 5,great,medium,medium
+the missing sock,cheap,south,chinese,01223 812660,finders corner newmarket road,c.b 25,mediocre,busy,short
+royal standard,expensive,east,spanish,01223 247877,290 mill road city centre,c.b 1,good,medium,long
+grafton hotel restaurant,expensive,east,british,01223 241387,grafton hotel 619 newmarket road fen ditton,c.b 5,good,busy,short
+dojo noodle bar,expensive,centre,asian oriental,01223 363471,40210 millers yard city centre,c.b 2,great,low,short
+cambridge lodge restaurant,expensive,west,european,01223 355166,cambridge lodge hotel 139 huntingdon road city centre,c.b 3,mediocre,low,short
+thanh binh,cheap,west,vietnamese,01223 362456,17 magdalene street city centre,c.b 3,mediocre,busy,medium
+stazione restaurant and coffee bar,expensive,centre,korean,01223 352607,market hill city centre,nan,great,low,medium
+cote,expensive,centre,french,01223 311053,bridge street city centre,c.b 2,great,low,medium
+cotto,medium,centre,british,01223 302010,183 east road city centre,c.b 1,mediocre,medium,long
+bangkok city,expensive,centre,thai,01223 354382,24 green street city centre,c.b 2,great,low,short
+frankie and bennys,expensive,south,italian,01223 412430,cambridge leisure park clifton way cherry hinton,c.b 1,good,busy,medium
+the cow pizza kitchen and bar,medium,centre,moroccan,01223 308871,corn exchange street,c.b 2,mediocre,busy,long
+eraina,expensive,centre,european,01223 368786,free school lane city centre,c.b 2,great,busy,long
+curry garden,expensive,centre,asian oriental,01223 302330,106 regent street city centre,nan,mediocre,low,long
+mahal of cambridge,cheap,centre,indian,01223 360409,3 - 5 millers yard mill lane,nan,mediocre,medium,medium
+golden wok,medium,north,asian oriental,01223 350688,191 histon road chesterton,c.b 4,great,medium,short
+meghna,medium,north,indian,01223 727410,205 victoria road chesterton,c.b 4,great,medium,medium
+the nirala,medium,north,indian,01223 360966,7 milton road chesterton,c.b 4,good,low,long
+michaelhouse cafe,expensive,centre,european,01223 309147,st. michael's church trinity street city centre,c.b 2,mediocre,medium,long
+efes restaurant,medium,centre,swiss,01223 500005,king street city centre,c.b 1,great,medium,medium
+chiquito restaurant bar,expensive,south,european,01223 400170,2g cambridge leisure park cherry hinton road cherry hinton,c.b 1,mediocre,low,short
+caffe uno,expensive,centre,italian,01223 448620,32 bridge street city centre,nan,mediocre,busy,medium
+j restaurant,cheap,centre,fusion,01223 307581,86 regent street city centre,c.b 2,mediocre,busy,long
+la margherita,cheap,south,italian,01223 315232,15 magdalene street city centre,c.b 3,great,low,short
+cocum,expensive,east,gastropub,01223 366668,71 castle street city centre,c.b 3,good,medium,short
+city stop restaurant,expensive,north,tuscan,01223 363270,cambridge city football club milton road chesterton,nan,great,low,long
+sala thong,expensive,west,thai,01223 323178,35 newnham road newnham,c.b 3,good,low,long
+don pasquale pizzeria,expensive,south,european,01223 350106,12 market hill city centre,nan,mediocre,busy,medium
+little seoul,expensive,centre,korean,01223 308681,108 regent street city centre,c.b 2,good,medium,medium
+rice house,cheap,south,chinese,01223 367755,88 mill road city centre,nan,good,medium,long
+the river bar steakhouse and grill,cheap,centre,modern european,01223 307030,quayside off bridge street,c.b 5,great,medium,short
+nandos city centre,cheap,centre,portuguese,01223 327908,33-34 saint andrews street,c.b 2,mediocre,busy,short
+prezzo,medium,west,italian,01799 521260,21 - 24 northampton road,c.b 3,good,medium,short
+galleria,medium,centre,european,01223 362054,33 bridge street,c.b 2,good,medium,short
+bloomsbury restaurant,medium,north,international,0871 942 9180,crowne plaza hotel 20 downing street,c.b 2,good,busy,long
+the good luck chinese food takeaway,expensive,south,chinese,01223 244149,82 cherry hinton road cherry hinton,c.b 1,mediocre,busy,long
+the varsity restaurant,medium,centre,international,01223 356060,35 saint andrews street city centre,c.b 2,good,busy,medium
+de luca cucina and bar,medium,centre,modern european,01223 356666,83 regent street,c.b 2,good,medium,long
+da vinci pizzeria,cheap,north,traditional,01223 351707,20 milton road chesterton,c.b 4,good,low,medium
+shiraz restaurant,expensive,centre,mediterranean,01223 307581,84 regent street city centre,c.b 2,great,busy,medium
+the lucky star,cheap,south,chinese,01223 244277,cambridge leisure park clifton way cherry hinton,c.b 1,great,low,short
+royal spice,cheap,north,indian,01733 553355,victoria avenue chesterton,c.b 4,mediocre,low,short
+ask,cheap,centre,seafood,01223 364917,12 bridge street city centre,c.b 2,mediocre,busy,medium
+taj tandoori,expensive,south,portuguese,01223 412299,64 cherry hinton road cherry hinton,c.b 1,great,low,long
+tandoori palace,medium,north,indian,01223 506055,68 histon road chesterton,c.b 4,mediocre,medium,medium
+yippee noodle bar,medium,centre,asian oriental,01223 518111,40428 king street city centre,c.b 1,good,busy,short
+travellers rest,expensive,west,british,01223 276182,huntingdon road city centre,nan,good,medium,long
+maharajah tandoori restaurant,expensive,east,indian,01223 358399,41518 castle street city centre,c.b 3,mediocre,low,short
+shanghai family restaurant,medium,east,chinese,01223 301761,39 burleigh street city centre,nan,good,medium,long
+curry prince,expensive,east,indian,01223 566388,451 newmarket road fen ditton,c.b 5,great,medium,short
+the gandhi,cheap,centre,indian,01223 353942,72 regent street city centre,nan,mediocre,medium,short
+kymmoy,expensive,centre,asian oriental,01223 311911,52 mill road city centre,c.b 1,mediocre,busy,short
+golden house,cheap,centre,polynesian,01842 753771,12 lensfield road city centre,nan,mediocre,medium,long
+bedouin,expensive,centre,african,01223 367660,100 mill road city centre,c.b 1,good,medium,medium
+pipasha restaurant,expensive,east,indian,01223 577786,newmarket road fen ditton,c.b 5,great,medium,short
+charlie chan,cheap,centre,chinese,01223 361763,regent street city centre,c.b 2,great,busy,long
+lan hong house,medium,centre,thai,01223 350420,12 norfolk street city centre,nan,great,medium,long
+la tasca,medium,centre,spanish,01223 464630,14 -16 bridge street,c.b 2,great,busy,short
+backstreet bistro,expensive,south,gastropub,01223 306306,2 sturton street city centre,c.b 1,good,low,medium
+la raza,cheap,centre,spanish,01223 464550,4 - 6 rose crescent,c.b 2,good,medium,medium
+the slug and lettuce,expensive,east,gastropub,dontcare,34 - 35 green street,c.b 2,mediocre,busy,long
+restaurant one seven,medium,north,british,01223 337766,de vere university arms regent street city centre,nan,good,busy,long
+fitzbillies restaurant,expensive,centre,british,01223 352500,51 trumpington street city centre,nan,great,medium,medium
+anatolia,medium,centre,turkish,01223 362372,30 bridge street city centre,c.b 2,mediocre,low,medium
+clowns cafe,medium,centre,bistro,01223 355711,nan,c.b 1,good,low,long
+kohinoor,cheap,west,indian,01223 323639,74 mill road city centre,nan,mediocre,busy,medium
+the cambridge chop house,cheap,centre,british,01223 359506,1 kings parade,nan,great,low,long
+gourmet burger kitchen,expensive,centre,north american,01223 312598,regent street city centre,c.b 2,mediocre,busy,long
+la mimosa,expensive,centre,mediterranean,01223 362525,thompsons lane fen ditton,c.b 5,good,busy,long
+meze bar restaurant,expensive,centre,turkish,nan,196 mill road city centre,c.b 1,great,busy,long
+the golden curry,expensive,south,australasian,01223 329432,nan,nan,mediocre,medium,short
+curry queen,medium,nan,indian,nan,106 mill road city centre,c.b 1,mediocre,busy,medium
 hakka,cheap,north,persian,01223 568988,milton road chesterton,c.b 4,good,busy,medium
-the oak bistro,moderate,centre,british,01223 323361,6 lensfield road,nan,mediocre,medium,medium
-riverside brasserie,moderate,centre,gastropub,01223 259988,doubletree by hilton cambridge granta place mill lane,nan,great,busy,short
-the copper kettle,moderate,east,british,01223 365068,4 kings parade city centre,c.b 2,mediocre,busy,long
-zizzi cambridge,expensive,south,italian,01223 365599,47-53 regent street,nan,good,busy,medium
-saffron brasserie,expensive,centre,jamaican,nan,nan,nan,mediocre,medium,medium
-india house,expensive,west,indian,01223 461661,31 newnham road newnham,nan,mediocre,busy,medium
-ali baba,moderate,centre,lebanese,01462 432565,59 hills road city centre,c.b 2,good,medium,long
-rice boat,expensive,north,indian,01223 302800,37 newnham road newnham,nan,good,busy,medium
-midsummer house restaurant,expensive,centre,british,01223 369299,midsummer common,nan,great,busy,short
-hotel du vin and bistro,moderate,centre,european,01223 227330,15 - 19 trumpington street,c.b 2,mediocre,medium,short
-darrys cookhouse and wine shop,expensive,south,modern european,01223 505015,40270 king street city centre,c.b 1,good,low,medium
-pizza express,cheap,centre,spanish,01223 324033,nan,c.b 2,good,low,short
-jinling noodle bar,moderate,centre,cuban,01223 566188,11 peas hill city centre,c.b 2,great,medium,short
-graffiti,moderate,north,indian,01223 277977,hotel felix whitehouse lane huntingdon road,c.b 3,great,medium,medium
-wagamama,expensive,centre,japanese,01223 462354,36 saint andrews street,c.b 2,great,medium,short
-pizza hut city centre,cheap,centre,italian,01223 323737,regent street city centre,nan,great,busy,long
-curry king,expensive,centre,seafood,01223 324351,5 jordans yard bridge street city centre,nan,good,busy,short
-panahar,expensive,centre,mediterranean,nan,nan,nan,mediocre,medium,short
+the oak bistro,medium,centre,british,01223 323361,6 lensfield road,nan,good,medium,medium
+riverside brasserie,medium,centre,gastropub,01223 259988,doubletree by hilton cambridge granta place mill lane,nan,mediocre,low,long
+the copper kettle,medium,east,british,01223 365068,4 kings parade city centre,c.b 2,good,low,short
+zizzi cambridge,expensive,south,italian,01223 365599,47-53 regent street,nan,mediocre,low,long
+saffron brasserie,expensive,centre,jamaican,nan,nan,nan,good,busy,long
+india house,expensive,west,indian,01223 461661,31 newnham road newnham,nan,good,medium,short
+ali baba,medium,centre,lebanese,01462 432565,59 hills road city centre,c.b 2,mediocre,medium,medium
+rice boat,expensive,north,indian,01223 302800,37 newnham road newnham,nan,mediocre,low,long
+midsummer house restaurant,expensive,centre,british,01223 369299,midsummer common,nan,good,medium,medium
+hotel du vin and bistro,medium,centre,european,01223 227330,15 - 19 trumpington street,c.b 2,mediocre,low,short
+darrys cookhouse and wine shop,expensive,south,modern european,01223 505015,40270 king street city centre,c.b 1,great,busy,long
+pizza express,cheap,centre,spanish,01223 324033,nan,c.b 2,great,medium,short
+jinling noodle bar,medium,centre,cuban,01223 566188,11 peas hill city centre,c.b 2,good,busy,medium
+graffiti,medium,north,indian,01223 277977,hotel felix whitehouse lane huntingdon road,c.b 3,great,low,short
+wagamama,expensive,centre,japanese,01223 462354,36 saint andrews street,c.b 2,good,low,medium
+pizza hut city centre,cheap,centre,italian,01223 323737,regent street city centre,nan,great,busy,medium
+curry king,expensive,centre,seafood,01223 324351,5 jordans yard bridge street city centre,nan,good,medium,short
+panahar,expensive,centre,mediterranean,nan,nan,nan,good,busy,short
 ugly duckling,expensive,centre,catalan,nan,12 st. johns street city centre,nan,mediocre,low,medium
-pizza express fen ditton,moderate,centre,european,nan,jesus lane fen ditton,nan,good,low,medium
-sesame restaurant and bar,moderate,nan,turkish,nan,nan,nan,great,low,long
-hk fusion,expensive,centre,thai,nan,21 burleigh street city centre,c.b 1,good,low,medium
-the copper spoon,cheap,east,british,01223 610000,14 newmarket road,cb5 8dl,good,medium,short
-the old parsonage,cheap,north,british,01223 610001,123 chesterton road,cb4 1db,mediocre,medium,long
-copper & thyme,expensive,north,british,01223 610002,180 milton road,cb4 1tn,great,medium,medium
-oak & crown,cheap,south,british,01223 610003,106 cherry hinton road,cb1 7dy,great,medium,short
-the king's orchard,moderate,south,british,01223 610004,133 hills road,cb1 7dy,good,medium,long
-the bell & barley,expensive,south,british,01223 610005,167 trumpington road,cb1 7dy,mediocre,low,medium
-the millstone,cheap,west,british,01223 610006,52 castle street,cb3 0fa,mediocre,medium,long
-the foundry kitchen,expensive,centre,modern european,01223 610007,88 king's parade,cb2 1aa,great,busy,short
-the glasshouse,cheap,east,modern european,01223 610008,18 newmarket road,cb5 8jd,mediocre,medium,long
-copper & slate,moderate,east,modern european,01223 610009,140 coldhams lane,cb5 8jd,mediocre,medium,medium
-the winter garden,expensive,east,modern european,01223 610010,148 coldhams lane,cb5 8jd,good,medium,medium
-no. 27 table,cheap,north,modern european,01223 610011,186 chesterton road,cb4 1tn,mediocre,busy,medium
-the terrace room,expensive,north,modern european,01223 610012,16 arbury road,cb4 1tn,great,medium,short
-the vaulted room,cheap,south,modern european,01223 610013,32 cherry hinton road,cb1 2jw,mediocre,busy,long
-the courtyard,moderate,south,modern european,01223 610014,150 hills road,cb1 7dy,good,low,short
-atelier & vine,cheap,west,modern european,01223 610015,51 castle street,cb3 0fa,good,busy,medium
-café linden,moderate,west,modern european,01223 610016,163 queen's road,cb3 9aa,good,low,long
-aria brasserie,expensive,west,modern european,01223 610017,44 queen's road,cb3 9aa,good,busy,short
-casa di campo,moderate,centre,italian,01223 610018,14 trinity street,cb2 1aa,mediocre,medium,short
-trattoria del mercato,cheap,east,italian,01223 610019,76 barnwell road,cb5 9al,great,low,short
-trattoria al ponte,expensive,east,italian,01223 610020,198 newmarket road,cb5 9al,good,medium,short
-osteria ponte,cheap,north,italian,01223 610021,56 arbury road,cb4 1db,great,busy,long
-forno antico,moderate,north,italian,01223 610022,11 chesterton road,cb4 1tn,mediocre,low,short
-la trattoria verde,expensive,north,italian,01223 610023,168 chesterton road,cb4 1tn,mediocre,medium,short
-pasta vento,cheap,west,italian,01223 610024,151 queen's road,cb3 9aa,mediocre,busy,medium
-casa roma,expensive,west,italian,01223 610025,68 queen's road,cb3 0aj,good,low,short
-mariner's table,cheap,east,seafood,01223 610026,69 barnwell road,cb5 9al,mediocre,busy,long
-the blue trawler,moderate,east,seafood,01223 610027,105 barnwell road,cb5 8dl,good,busy,medium
-the driftwood kitchen,expensive,east,seafood,01223 610028,128 coldhams lane,cb5 8jd,good,medium,medium
-the gull & line,cheap,north,seafood,01223 610029,53 arbury road,cb4 1tn,good,medium,long
-lobster & line,moderate,north,seafood,01223 610030,18 chesterton road,cb4 1db,good,low,medium
-the net & anchor,expensive,north,seafood,01223 610031,163 arbury road,cb4 1db,great,busy,medium
-the oyster quay,cheap,south,seafood,01223 610032,120 hills road,cb1 7dy,good,low,long
-coral bay grill,moderate,south,seafood,01223 610033,7 cherry hinton road,cb1 2jw,great,low,short
-tide & thyme,expensive,south,seafood,01223 610034,175 hills road,cb1 2jw,good,medium,medium
-deepwater grill,cheap,west,seafood,01223 610035,23 castle street,cb3 0aj,good,medium,long
-salt & shell,moderate,west,seafood,01223 610036,39 castle street,cb3 0aj,good,medium,medium
-harbor & hake,expensive,west,seafood,01223 610037,182 castle street,cb3 0fa,good,busy,medium
-red panda kitchen,moderate,centre,chinese,01223 610038,27 king's parade,cb1 1pt,mediocre,busy,long
-pearl & pepper,expensive,centre,chinese,01223 610039,5 sidney street,cb2 3ab,good,busy,long
-mandarin garden,cheap,east,chinese,01223 610040,118 barnwell road,cb5 8jd,great,busy,short
-golden wok room,cheap,north,chinese,01223 610041,108 chesterton road,cb4 1tn,good,medium,medium
-bamboo courtyard,moderate,north,chinese,01223 610042,182 chesterton road,cb4 1tn,great,medium,medium
-silk lantern,moderate,south,chinese,01223 610043,146 trumpington road,cb2 8ru,mediocre,medium,short
-jade river,cheap,west,chinese,01223 610044,21 northampton street,cb3 0aj,great,busy,short
-lotus & lychee,moderate,west,chinese,01223 610045,158 northampton street,cb3 0aj,mediocre,busy,medium
-the golden lotus,expensive,west,chinese,01223 610046,94 castle street,cb3 0aj,good,low,long
-cardamom & clove,moderate,centre,indian,01223 610047,125 market street,cb2 1aa,great,low,short
-spice court,expensive,centre,indian,01223 610048,18 sidney street,cb2 3ab,great,busy,short
-masala garden,cheap,east,indian,01223 610049,35 barnwell road,cb5 9al,mediocre,low,medium
-curry quay,cheap,south,indian,01223 610050,56 trumpington road,cb1 2jw,great,busy,short
-bombay leaf,moderate,south,indian,01223 610051,49 trumpington road,cb1 7dy,great,busy,short
-tandoor flame,expensive,south,indian,01223 610052,175 trumpington road,cb1 2jw,good,medium,short
-the tiffin room,moderate,west,indian,01223 610053,21 queen's road,cb3 0fa,great,busy,long
-la plaza vieja,expensive,centre,spanish,01223 610054,165 king's parade,cb1 1pt,great,busy,medium
-casa andaluza,cheap,east,spanish,01223 610055,113 coldhams lane,cb5 8dl,good,busy,medium
-la roja tapas,moderate,east,spanish,01223 610056,70 barnwell road,cb5 9al,good,low,medium
-tapas del mercado,cheap,north,spanish,01223 610057,187 arbury road,cb4 1db,mediocre,busy,medium
-puerta de oro,moderate,north,spanish,01223 610058,157 chesterton road,cb4 3pt,great,low,medium
-casa flamenca,expensive,north,spanish,01223 610059,5 milton road,cb4 1db,great,low,medium
-el puente,cheap,south,spanish,01223 610060,113 cherry hinton road,cb2 8ru,mediocre,low,medium
-bodega del rio,moderate,south,spanish,01223 610061,63 trumpington road,cb1 7dy,mediocre,low,medium
-oliva & mar,expensive,south,spanish,01223 610062,69 trumpington road,cb2 8ru,great,busy,medium
-azafrán cocina,cheap,west,spanish,01223 610063,176 queen's road,cb3 9aa,mediocre,low,long
-barrio verde,moderate,west,spanish,01223 610064,146 northampton street,cb3 9aa,good,busy,short
-casa del sol,expensive,west,spanish,01223 610065,196 northampton street,cb3 0fa,great,busy,short
+pizza express fen ditton,medium,centre,european,nan,jesus lane fen ditton,nan,good,low,medium
+sesame restaurant and bar,medium,nan,turkish,nan,nan,nan,great,low,long
+hk fusion,expensive,centre,thai,nan,21 burleigh street city centre,c.b 1,great,busy,long
+the copper spoon,cheap,east,british,01223 610000,14 newmarket road,cb5 8dl,good,busy,short
+the old parsonage,cheap,north,british,01223 610001,123 chesterton road,cb4 1db,mediocre,medium,short
+copper & thyme,expensive,north,british,01223 610002,180 milton road,cb4 1tn,great,busy,medium
+oak & crown,cheap,south,british,01223 610003,106 cherry hinton road,cb1 7dy,great,medium,long
+the king's orchard,medium,south,british,01223 610004,133 hills road,cb1 7dy,mediocre,medium,medium
+the bell & barley,expensive,south,british,01223 610005,167 trumpington road,cb1 7dy,mediocre,busy,short
+the millstone,cheap,west,british,01223 610006,52 castle street,cb3 0fa,good,busy,medium
+the foundry kitchen,expensive,centre,modern european,01223 610007,88 king's parade,cb2 1aa,good,low,long
+the glasshouse,cheap,east,modern european,01223 610008,18 newmarket road,cb5 8jd,great,busy,medium
+copper & slate,medium,east,modern european,01223 610009,140 coldhams lane,cb5 8jd,great,low,short
+the winter garden,expensive,east,modern european,01223 610010,148 coldhams lane,cb5 8jd,great,busy,medium
+no. 27 table,cheap,north,modern european,01223 610011,186 chesterton road,cb4 1tn,mediocre,low,short
+the terrace room,expensive,north,modern european,01223 610012,16 arbury road,cb4 1tn,mediocre,medium,medium
+the vaulted room,cheap,south,modern european,01223 610013,32 cherry hinton road,cb1 2jw,good,medium,medium
+the courtyard,medium,south,modern european,01223 610014,150 hills road,cb1 7dy,good,medium,medium
+atelier & vine,cheap,west,modern european,01223 610015,51 castle street,cb3 0fa,great,busy,long
+café linden,medium,west,modern european,01223 610016,163 queen's road,cb3 9aa,good,busy,medium
+aria brasserie,expensive,west,modern european,01223 610017,44 queen's road,cb3 9aa,great,medium,long
+casa di campo,medium,centre,italian,01223 610018,14 trinity street,cb2 1aa,mediocre,busy,long
+trattoria del mercato,cheap,east,italian,01223 610019,76 barnwell road,cb5 9al,good,busy,medium
+trattoria al ponte,expensive,east,italian,01223 610020,198 newmarket road,cb5 9al,great,low,short
+osteria ponte,cheap,north,italian,01223 610021,56 arbury road,cb4 1db,mediocre,busy,long
+forno antico,medium,north,italian,01223 610022,11 chesterton road,cb4 1tn,good,low,medium
+la trattoria verde,expensive,north,italian,01223 610023,168 chesterton road,cb4 1tn,good,low,long
+pasta vento,cheap,west,italian,01223 610024,151 queen's road,cb3 9aa,mediocre,low,medium
+casa roma,expensive,west,italian,01223 610025,68 queen's road,cb3 0aj,mediocre,medium,short
+mariner's table,cheap,east,seafood,01223 610026,69 barnwell road,cb5 9al,mediocre,low,short
+the blue trawler,medium,east,seafood,01223 610027,105 barnwell road,cb5 8dl,mediocre,low,short
+the driftwood kitchen,expensive,east,seafood,01223 610028,128 coldhams lane,cb5 8jd,mediocre,low,short
+the gull & line,cheap,north,seafood,01223 610029,53 arbury road,cb4 1tn,mediocre,medium,medium
+lobster & line,medium,north,seafood,01223 610030,18 chesterton road,cb4 1db,great,low,medium
+the net & anchor,expensive,north,seafood,01223 610031,163 arbury road,cb4 1db,good,low,long
+the oyster quay,cheap,south,seafood,01223 610032,120 hills road,cb1 7dy,great,medium,long
+coral bay grill,medium,south,seafood,01223 610033,7 cherry hinton road,cb1 2jw,good,medium,medium
+tide & thyme,expensive,south,seafood,01223 610034,175 hills road,cb1 2jw,great,busy,medium
+deepwater grill,cheap,west,seafood,01223 610035,23 castle street,cb3 0aj,mediocre,busy,medium
+salt & shell,medium,west,seafood,01223 610036,39 castle street,cb3 0aj,good,medium,short
+harbor & hake,expensive,west,seafood,01223 610037,182 castle street,cb3 0fa,great,busy,long
+red panda kitchen,medium,centre,chinese,01223 610038,27 king's parade,cb1 1pt,good,low,long
+pearl & pepper,expensive,centre,chinese,01223 610039,5 sidney street,cb2 3ab,good,busy,short
+mandarin garden,cheap,east,chinese,01223 610040,118 barnwell road,cb5 8jd,great,busy,medium
+golden wok room,cheap,north,chinese,01223 610041,108 chesterton road,cb4 1tn,mediocre,low,short
+bamboo courtyard,medium,north,chinese,01223 610042,182 chesterton road,cb4 1tn,good,low,medium
+silk lantern,medium,south,chinese,01223 610043,146 trumpington road,cb2 8ru,good,medium,short
+jade river,cheap,west,chinese,01223 610044,21 northampton street,cb3 0aj,good,low,medium
+lotus & lychee,medium,west,chinese,01223 610045,158 northampton street,cb3 0aj,mediocre,medium,medium
+the golden lotus,expensive,west,chinese,01223 610046,94 castle street,cb3 0aj,good,medium,long
+cardamom & clove,medium,centre,indian,01223 610047,125 market street,cb2 1aa,mediocre,low,short
+spice court,expensive,centre,indian,01223 610048,18 sidney street,cb2 3ab,mediocre,low,short
+masala garden,cheap,east,indian,01223 610049,35 barnwell road,cb5 9al,good,low,medium
+curry quay,cheap,south,indian,01223 610050,56 trumpington road,cb1 2jw,good,busy,long
+bombay leaf,medium,south,indian,01223 610051,49 trumpington road,cb1 7dy,great,low,short
+tandoor flame,expensive,south,indian,01223 610052,175 trumpington road,cb1 2jw,great,busy,short
+the tiffin room,medium,west,indian,01223 610053,21 queen's road,cb3 0fa,good,low,short
+la plaza vieja,expensive,centre,spanish,01223 610054,165 king's parade,cb1 1pt,mediocre,busy,medium
+casa andaluza,cheap,east,spanish,01223 610055,113 coldhams lane,cb5 8dl,mediocre,low,long
+la roja tapas,medium,east,spanish,01223 610056,70 barnwell road,cb5 9al,mediocre,low,long
+tapas del mercado,cheap,north,spanish,01223 610057,187 arbury road,cb4 1db,mediocre,low,long
+puerta de oro,medium,north,spanish,01223 610058,157 chesterton road,cb4 3pt,mediocre,low,medium
+casa flamenca,expensive,north,spanish,01223 610059,5 milton road,cb4 1db,mediocre,busy,medium
+el puente,cheap,south,spanish,01223 610060,113 cherry hinton road,cb2 8ru,mediocre,low,long
+bodega del rio,medium,south,spanish,01223 610061,63 trumpington road,cb1 7dy,good,medium,short
+oliva & mar,expensive,south,spanish,01223 610062,69 trumpington road,cb2 8ru,mediocre,medium,long
+azafrán cocina,cheap,west,spanish,01223 610063,176 queen's road,cb3 9aa,good,medium,short
+barrio verde,medium,west,spanish,01223 610064,146 northampton street,cb3 9aa,great,low,short
+casa del sol,expensive,west,spanish,01223 610065,196 northampton street,cb3 0fa,great,low,short
+,,,mexican,,,,,,
+,,,greek,,,,,,
+,,,american,,,,,,
