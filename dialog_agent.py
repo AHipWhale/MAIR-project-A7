@@ -555,28 +555,28 @@ class dialogAgent():
             if self.debug_mode:
                 print("Entered State '6.2 Ask Food type'")
         
-        elif current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
-            # State "8.1 Ask for additional preferences"
-            next_state = "8.1 Ask for additional preferences"
-            
-            response_utterance = self.__formal_informal("Do you have any additional preferences?", "Any more preferences?")
+        # elif current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type"] and self.area != None and self.price != None and self.food != None:
+        #     # State "8.1 Ask for additional preferences"
+        #     next_state = "8.1 Ask for additional preferences"
+        #     
+        #     response_utterance = self.__formal_informal("Do you have any additional preferences?", "Any more preferences?")
 
         # State "1. Welcome" or "4.2 Ask Area" or "5.2 Ask Price" or "6.2 Ask Food type" or "9.2 Change 1 of preferences" to "9.2 Change 1 of preferences" or "10.1 Suggest restaurant"
         elif current_state in ["1. Welcome", "4.2 Ask Area", "5.2 Ask Price", "6.2 Ask Food type", "8.1 Ask for additional preferences", "9.2 Change 1 of preferences"] and self.area != None and self.price != None and self.food != None: # 9.1 Is there a match
             
-            if current_state == "8.1 Ask for additional preferences":
-                # extract preferences from utterance
-                if "romantic" in utterance:
-                    self.romantic = True
-                
-                if "children" in utterance:
-                    self.children = True
-                
-                if "assigned" in utterance and "seats" in utterance:
-                    self.assigned_seats = True
-                
-                if "touristic" in utterance:
-                    self.touristic = True
+            # if current_state == "8.1 Ask for additional preferences":
+            #     # extract preferences from utterance
+            #     if "romantic" in utterance:
+            #         self.romantic = True
+            #     
+            #     if "children" in utterance:
+            #         self.children = True
+            #     
+            #     if "assigned" in utterance and "seats" in utterance:
+            #         self.assigned_seats = True
+            #     
+            #     if "touristic" in utterance:
+            #         self.touristic = True
             
             # Look up possible restaurants that meet requirements
             possible_restaurants = self.__look_up_restaurants(self.area, self.price, self.food)
